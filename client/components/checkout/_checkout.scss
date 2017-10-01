@@ -1,0 +1,218 @@
+.checkout {
+	@include center;
+	margin-top: 50px;
+	@media #{$mq-670} {
+		margin-top: 80px;
+	}
+	&>div {
+		@include center;
+		flex-direction: column;
+		width: 100%;
+		margin-bottom: 20px;
+		align-items: flex-start;
+		@media #{$mq-890} {
+			flex-direction: row;
+			// justify-content: space-between;
+			max-width: 950px;
+		}
+		&>div {
+			@include center;
+			flex-direction: column;
+			width: 100%;
+			max-width: 450px;
+			margin-bottom: 30px;
+			&>h2 {
+				font-size: 2.25em;
+				@include backgroundLeft;
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				font-weight: 900;
+				margin-bottom: 10px;
+			}
+			&>div {
+				@include center;
+				flex-direction: row;
+				background: #fff;
+				border-radius: 5px;
+				width: 90%;
+				padding: 20px 0;
+				@include headerShadow;
+				flex-wrap: wrap;
+				&>h3 {
+					@include backgroundLeft;
+					-webkit-background-clip: text;
+					-webkit-text-fill-color: transparent;
+					font-weight: 900;
+					margin: 0;
+					margin-top: 30px;
+					width: 80%;
+					text-align: center;
+				}
+				&>.input {
+					@include center;
+					flex-direction: column;
+					width: 80%;
+					position: relative;
+					margin-bottom: 7.5px;
+					&::after {
+						content: "";
+						position: absolute;
+						top: 100%;
+						left: 0;
+						width: 100%;
+						height: 2px;
+						@include backgroundLeft;
+					}
+					// &::before {
+					// 	content: "";
+					// 	position: absolute;
+					// 	top: 100%;
+					// 	left: 50%;
+					// 	width: 0%;
+					// 	height: 4px;
+					// 	@include backgroundLeft;
+					// 	transition-duration: 0.4s;
+					// }
+					&>label {
+						width: 95%;
+						transform: translateY(27.5px);
+						transition-duration: 0.3s;
+					}
+					&>input {
+						width: 100%;
+						background: #fff;
+						outline: none;
+						border: none;
+						border-radius: 0;
+						padding: 5px;
+					}
+				}
+				&>.state,
+				&>.zip {
+					width: 45%;
+				}
+				&>.state {
+					margin-right: 5%;
+					position: relative;
+					&>.autocomp {
+						width: 100%;
+						background: #fff;
+						position: absolute;
+						top: 100%;
+						left: 0;
+						text-align: center;
+						border-bottom-right-radius: 5px;
+						border-bottom-left-radius: 5px;
+						@include headerShadow;
+						color: #000;
+						&>div {
+							width: 100%;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							cursor: pointer;
+							padding: 5px 0;
+							&:hover {
+								@include backgroundLeft;
+								color:#fff;
+							}
+						}
+					}
+				}
+				&>.zip {
+					width: 25%;
+					margin-left: 5%;
+				}
+				&>.month,
+				&>.year,
+				&>.cv {
+					width: 23.33333%;
+				}
+				&>.month {
+					margin-right: 2.5%;
+				}
+				&>.year {
+					margin-right: 2.5%;
+					margin-left: 2.5%
+				}
+				&>.cv {
+					margin-left: 2.5%
+				}
+				&>.focus {
+					// &::before {
+					// 	width: 100%;
+					// 	left: 0;
+					// }
+					&>label {
+						color: #828282;
+						transform: translateY(0px) scale(0.85) translateX(-25px);
+					}
+				}
+				&>button {
+					height: 40px;
+					width: 80%;
+					@include backgroundLeft;
+					outline: none;
+					border: none;
+					color: #fff;
+					@include headerShadow;
+					border-radius: 5px;
+					margin-top: 20px;
+					margin-bottom: 20px;
+					transition-duration: 0.4s;
+				}
+				&>.button-loads {
+					width: 100px;
+					height: 100px;
+					border-radius: 50%;
+					color: transparent;
+					background: #EB3349 url('loader.gif') no-repeat center;
+					background-size: 60% 60%;
+				}
+				&>.button-good {
+					background: #EB3349 url('check2.svg') no-repeat center;
+					background-size: 60% 60%;
+					transition-duration: 0.25s;
+				}
+			}
+		}
+		&>div:first-of-type {
+			@media #{$mq-957} {
+				margin-right: 2.5%;
+			}
+		}
+		&>div:last-of-type {
+			@media #{$mq-957} {
+				margin-left: 2.5%;
+			}
+		}
+	}
+	&>.congrats {
+		width: 90%;
+		max-width: 500px;
+		background: #fff;
+		border-radius: 5px;
+		@include headerShadow;
+		@include center;
+		margin-top: 20px;
+		&>div{
+			@include center;
+			&>p {
+				width: 90%;
+			}
+			&>button {
+				height: 40px;
+				width: 90%;
+				@include backgroundLeft;
+				outline: none;
+				border: none;
+				color: #fff;
+				@include headerShadow;
+				border-radius: 5px;
+				margin-top: 20px;
+				margin-bottom: 20px;
+				transition-duration: 0.4s;
+			}
+		}
+	}
+}

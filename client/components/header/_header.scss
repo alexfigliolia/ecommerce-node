@@ -1,0 +1,142 @@
+header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 50px;
+	width: 100%;
+	background: #EB3349; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	@include center;
+	justify-content: space-between;
+	@include headerShadow;
+	color: #FFF;
+	z-index: 100000;
+	font-family: "Raleway", sans-serif;
+	@media #{$mq-670} {
+		height: 80px;
+	}
+	&>h1 {
+		font-size: 1.25em;
+		@media #{$mq-410}{
+			font-size: 2em;
+		}
+	}
+}
+
+.logo {
+	cursor: pointer;
+	font-weight: 900;
+	@media #{$mq-800} {
+		margin-left: 15px;
+	}
+}
+
+#toCart,
+#burg {
+	height: 50px;
+	width: 50px;
+	@media #{$mq-670} {
+		height: 70px;
+		width: 70px;
+	}
+	@media #{$mq-800} {
+		display: none;
+	}
+}
+#toCart {
+	cursor: pointer;
+	background: url('cart3.svg') no-repeat center;
+	background-size: 70% 70%;
+	position: relative;
+	@media #{$mq-800} {
+		order: 3;
+	}
+}
+.mgoats {
+	position: absolute;
+	top: 4px;
+	right: -4px;
+	height: 22.5px;
+	width: 22.5px;
+	border-radius: 50%;
+	background-color: #EB3349;
+	@include center;
+	color: #fff;
+	font-size: 12px;
+	margin: auto;
+	font-family:"Roboto", sans-serif;
+	transform: scale(0);
+	transition-duration: 0.3s;
+	transition-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+.mgoats2 {
+	position: absolute;
+	top: -5px;
+	right: -8px;
+	height: 22.5px;
+	width: 22.5px;
+	border-radius: 50%;
+	background-color: #F45C43;
+	@include center;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 500;
+	font-family:"Roboto", sans-serif;
+	transform: scale(0);
+	transition-duration: 0.3s;
+	transition-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+
+.has-items {
+	transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	transform: scale(1);
+}
+
+#hLinks {
+	display: none;
+	@media #{$mq-800} {
+		@include center;
+		justify-content: center;
+		margin-right: 10px;
+		// width: 50%;
+		&>h2,
+		&>a {
+			cursor: pointer;
+			margin: 0 15px;
+			font-size: 20px;
+			position: relative;
+			font-weight: 900;
+			color: #fff;
+			text-decoration: none;
+			transition-duration: 0.2s;
+			&::after {
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				height: 1px;
+				width: 0%;
+				background: #fff;
+				transition-duration: 0.2s;
+			}
+			&:hover::after {
+				width: 100%;
+			}
+
+		}
+		&>.active {
+			&::after {
+				width: 100%;
+			}
+		}
+		&>h2:last-of-type {
+			margin-right: 10px;
+			margin-top: 5px;
+			position: relative;
+			&::after{
+				display: none;
+			}
+		}
+	}
+}

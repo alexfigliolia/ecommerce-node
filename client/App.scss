@@ -1,0 +1,30 @@
+@import 'components/variables';
+@import 'components/reset';
+@import 'components/flickity';
+
+body {
+	font-family: "Raleway", sans-serif;
+	background: url('sayagata-400px.png') repeat center;
+	// min-height: 100vh;
+}
+
+// #pageBody {
+// 	min-height: 100vh;
+// }
+
+.no-scroll {
+	overflow: hidden;
+}
+
+@import 'components/header/header';
+@import 'components/header/burger';
+@import 'components/footer/footer';
+@import 'components/home/banner';
+@import 'components/home/about';
+@import 'components/home/productsh';
+@import 'components/menu/menu';
+@import 'components/cart/cart';
+@import 'components/more/more';
+@import 'components/shop/shop';
+@import 'components/contact/contact';
+@import 'components/checkout/checkout';

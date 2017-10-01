@@ -1,0 +1,218 @@
+.intro {
+	@include center;
+	width: 100%;
+	position: relative;
+	// background-color: #fff;
+	padding: 0 0 40px 0;
+	overflow: hidden;
+	border-top: 2px solid #fff;
+	font-family: "Raleway", sans-serif;
+	@media #{$mq-670} {
+		padding: 80px 0 40px 0;
+		// background: #fff;
+	}
+	&>div {
+		@include center;
+		flex-direction: column;
+		@media #{$mq-670} {
+			flex-direction: row;
+		}
+	}
+}
+.img-container {
+	@include center;
+	width: 100%;
+	height: 200px;
+	margin: 0;
+	z-index: 2;
+	overflow: hidden;
+	position: relative;
+	border-bottom: 2px solid #fff;
+	&::after {
+		content: "The Foods";
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		top: 0;
+		left: 0;
+		color: #fff;
+		@include center;
+		background: transparent;
+		font-size: 2.5em;
+		text-shadow: 0px 0px 2.5px #000, 0px 0px 5px #000, 0px 0px 10px #000, 0px 0px 5px #000;
+		font-weight: 900;
+		@media #{$mq-1070} {
+			font-size: 3em;
+		}
+	}
+	&::before {
+		content: "";
+		height: 1px;
+		width: 100%;
+		position: absolute;
+		top: 50%;
+		left: 0;
+		background-color: #fff;
+		@include center;
+	}
+	@media #{$mq-670} {
+		width: auto;
+		height: 400px;
+		position: relative;
+		left: 40px;
+		@include headerShadow;
+		border: none;
+	}
+	@media #{$mq-1070} {
+		width: auto;
+		height: 450px;
+	}
+	&>img {
+		height: auto;
+		width: 100%;
+		@media #{$mq-670}{
+			width: auto;
+			height: 400px;
+		}
+		@media #{$mq-1070} {
+			width: auto;
+			height: 500px;
+		}
+	}
+
+}
+.text-container {
+	width: 100%;
+	@include headerShadow;
+	@include center;
+	flex-direction: column;
+	z-index: 2;
+	padding-top: 30px;
+	background: #EB3349; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	@media #{$mq-670}{
+		// width: 80%;
+		padding: 25px 15px 0px 15px;
+	}
+	@media #{$mq-670} {
+		position: relative;
+		left: -40px;
+		padding: 30px;
+		max-width: 500px;
+		width: 50%;
+		margin-top: 0;
+		border: 2px solid #fff;
+	}
+	@media #{$mq-1070} {
+		padding: 40px;
+		max-width: 600px;
+	}
+	&>h2 {
+		margin: 0;
+		margin-bottom: 0.25em;
+		font-size: 2em;
+		display: none;
+		font-weight: 900;
+	}
+	&>p {
+		margin: auto;
+		margin-top: 0;
+		width: 90%;
+		color: #fff;
+		@media #{$mq-670}{
+			max-width: 600px;
+			width: auto;
+			color: #fff;
+		}
+		@media #{$mq-957} {
+			line-height: 1.25;
+		}
+	}
+	&>p:first-of-type {
+		margin-bottom: 1em;
+	}
+	&>button {
+		background: #fff;
+		margin-top: 1.5em;
+		outline: none;
+		border: none;
+		color: #fff;
+		box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+		transition-duration: 0.2s;
+		overflow: hidden;
+		height: 60px;
+		width: 200px;
+		position: relative;
+		margin-bottom: 2em;
+		font-family: "Playfair Display", sans-serif;
+		font-weight: 900;
+		border-radius: 2.5px;
+		&::after {
+			content: "Explore the Foods";
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			color: #EB3349;
+			@include center;
+			transform: translateY(-100%);
+			opacity: 0;
+			transition-duration: 0.2s;
+		}
+		&::before {
+			content: "Explore the Foods";
+			position: absolute;
+			top: 0;
+			left: 0;
+			height: 100%;
+			width: 100%;
+			color: #EB3349;
+			@include center;
+			transform: translateY(0%);
+			transition-duration: 0.2s;
+		}
+		&:hover::before {
+			transform: translateY(100%);
+			opacity: 0;
+		}
+		&:hover::after {
+			transform: translateY(0%);
+			opacity: 1;
+		}
+		@media #{$mq-670} {
+			margin-top: 35px;
+			width: 250px;
+		}
+		@media #{$mq-670} {
+			height: 45px;
+			background: #fff;
+			margin-bottom: auto;
+			margin-top: 2em;
+		}
+		&:hover {
+			@include headerShadow;
+			transform: scale(1.02);
+		}
+	}
+}
+.strike {
+	background: #EB3349; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	 -webkit-background-clip: text;
+	 -webkit-text-fill-color: transparent;
+	position: relative;
+	&::after {
+		content: "";
+		position: absolute;
+		top: 100%;
+		left: -10%;
+		height: 1px;
+		width: 120%;
+		background: #EB3349; /* fallback for old browsers */
+		background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	}
+}

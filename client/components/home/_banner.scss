@@ -1,0 +1,207 @@
+.banner {
+	height: 100vh;
+	width: 100%;
+	background: red;
+	background: url('gnocchi-small.jpg') no-repeat center;
+	background-size: cover;
+	@include center;
+	flex-direction: column;
+	color: #fff;
+	position: relative;
+	font-family: "Raleway", sans-serif;
+	@media #{$mq-670} {
+		background: url('gnocchi.jpg') no-repeat center;
+		background-size: cover;
+	}
+	@media #{$mq-h-1024} {
+		height: 70vh;
+	}
+	&>.center {
+		z-index: 2;
+		@include center;
+		flex-direction: column;
+		margin-bottom: 15vh;
+		width: 95%;
+		@media #{$mq-670} {
+			margin-bottom: 10vh;
+		}
+		&>h1 {
+			font-size: 2.3em;
+			text-align: center;
+			text-shadow: 0px 0px 2.5px #000, 0px 0px 5px #000, 0px 0px 10px #000;
+			margin-bottom: 20px;
+			font-weight:700;
+			width: 90%;
+			line-height: 1.1;
+			font-family: "Playfair Display", sans-serif;
+			font-weight: 900;
+			@media #{$mq-670}{
+				font-size: 3em;
+			}
+		}
+		&>div {
+			@include center;
+			flex-direction: row;
+			&>button {
+				display: inline-block;
+				outline: none;
+				border: none;
+				background: #EB3349; /* fallback for old browsers */
+				background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+				color: #fff;
+				height: 50px;
+				width: 140px;
+				@include headerShadow;
+				overflow: hidden;
+				position: relative;
+				font-weight: 700;
+				transition-duration: 0.2s;
+				margin: auto 5px;
+				font-weight: 900;
+				letter-spacing: 1px;
+				border-radius: 2.5px;
+				@media #{$mq-1070} {
+					width: 180px;
+					height: 60px;
+				}
+				&::after {
+					content: "EXPLORE";
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					color: #fff;
+					@include center;
+					background: #EB3349; /* fallback for old browsers */
+					background: -webkit-linear-gradient(to bottom, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+					background: linear-gradient(to bottom, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+					transform: translateY(-100%);
+					opacity: 1;
+					transition-duration: 0.2s;
+				}
+				&::before {
+					content: "EXPLORE";
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					color: #fff;
+					@include center;
+					transform: translateY(0%);
+					transition-duration: 0.2s;
+				}
+				&:hover::before {
+					transform: translateY(100%);
+					opacity: 0;
+				}
+				&:hover::after {
+					transform: translateY(0%);
+					opacity: 1;
+				}
+				&:hover {
+					box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+					transform: scale(1.02);
+				}
+			}
+			&>#toAbout{
+				&::after {
+					content: "ABOUT US";
+				}
+				&::before {
+					content: "ABOUT US";
+				}
+			}
+		}
+	}
+	&>.scroll {
+		height: 50px;
+		width: 50px;
+		border: none;
+		outline: none;
+		border-radius: 50%;
+		background: url('down.svg') no-repeat center;
+		background-size: contain;
+		animation: jump 1.5s infinite;
+	}
+}
+.reveal {
+	z-index: 90;
+	position: fixed;
+	top: 50px;
+	left: 0;
+	transform-origin: 0% 50%;
+	font-family: "Raleway", sans-serif;
+	@include center;
+	color: #fff;
+	font-size: 6vh;
+	font-weight: 900;
+	transform: scaleX(0);
+	// transition-duration: 0.25;
+	transform-origin: 0% 50%;
+	width: 100%;
+	height: calc(100% - 50px);
+	background: #EB3349; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+// #r1 {
+// 	position: fixed;
+// 	top: 50px;
+// 	left: -20%;
+// 	transform-origin: 0% 50%;
+// }
+// #r2 {
+// 	position: fixed;
+// 	top: calc(25% + 37.5px);
+// 	right: -20%;
+// 	transform-origin: 100% 50%;
+// }
+// #r3 {
+// 	position: fixed;
+// 	bottom: calc(25% - 12.5px);
+// 	left: -20%;
+// 	transform-origin: 0% 50%;
+// }
+// #r4 {
+// 	position: fixed;
+// 	bottom: 0;
+// 	right: -20%;
+// 	transform-origin: 100% 50%;
+// }
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.reveal-show {
+	animation: reveal 0.75s;
+
+	@keyframes reveal {
+	    0% {
+	    	transform: scaleX(0);
+	    	transform-origin: 0% 50%;
+	    }
+	    25% {
+	    	transform: scaleX(1);
+	    	transform-origin: 0% 50%;
+	    }
+	    50% {
+	    	transform: scaleX(1);
+	    	transform-origin: 100% 50%;
+	    }	
+	    100% {
+	    	transform: scaleX(0);
+	    	transform-origin: 100% 50%;
+	    }	
+	}
+}

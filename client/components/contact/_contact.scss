@@ -1,0 +1,148 @@
+#contactUs {
+	margin-top: 50px;
+	@include center;
+	text-align: center;
+	flex-direction: column;
+	width: 100%;
+	color: #fff;
+	font-family: "Raleway", sans-serif;
+	@media #{$mq-670} {
+		margin-top: 80px;
+	}
+	&>#headings {
+		background: linear-gradient( to bottom, transparent, rgba(#000, 0.75)), url('bpizza1.jpg') no-repeat center;
+		background-size: cover;
+		width: 100%;
+		@include center;
+		flex-direction: column;
+		@include headerShadow;
+		&>h2 {
+			margin: 0.75em auto;
+			text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
+			font-weight: 900;
+			width: 90%;
+		}
+		&>h2:first-of-type {
+			margin-top: 1.25em;
+		}
+		&>h1 {
+			font-weight: 900;
+			background: #EB3349; /* fallback for old browsers */
+			background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+			background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			 -webkit-background-clip: text;
+			 -webkit-text-fill-color: transparent;
+			position: relative;
+			&::after {
+				content: "";
+				position: absolute;
+				top: 100%;
+				left: -10%;
+				height: 1px;
+				width: 120%;
+				background: #EB3349; /* fallback for old browsers */
+				background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			}
+		}
+	}
+	&>#cf {
+		@include center;
+		margin-bottom: 30px;
+		margin-top: 30px;
+		width: 100%;
+		&>form {
+			width: 90%;
+			max-width: 600px;
+			@include center;
+			flex-direction: column;
+			background-color: #fff;
+			@include headerShadow;
+			padding-top: 20px;
+			font-family: "Playfair Display", sans-serif;
+			border-radius: 4px;
+			&>input {
+				color: #000;
+				width: 90%;
+				max-width: 500px;
+				margin: 0.5em 0;
+				height: 30px;
+				padding: 10px;
+				outline: none;
+				border: none;
+				background: #fff;
+				border-bottom: 1px solid #000;
+				box-sizing: border-box;
+				position: relative;
+				border-radius: 0;
+			}
+			&>textarea {
+				padding: 10px;
+				color: #000;
+				width: 90%;
+				max-width: 500px;
+				height: 100px;
+				background: #fff;
+				outline: none;
+				border: none;
+				margin: 0.5em 0;
+				border-bottom: 1px solid #000;
+				box-sizing: border-box;
+				border-radius: 0;
+			}
+			&>button {
+				margin: 0.5em 0;
+				width: 200px;
+				height: 50px;
+				border: none;
+				outline: none;
+				background: #EB3349; /* fallback for old browsers */
+				background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+				background: linear-gradient(to left, #EB3349 , #F45C43); 
+				overflow:hidden;
+				color: #fff;
+				font-weight: bold;
+				position: relative;
+				margin-bottom: 30px;
+				text-align: center;
+				font-family: "Raleway", sans-serif;
+				font-weight: 900;
+				border-radius: 2.5px;
+				box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+				&::after {
+					content: "SEND";
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					color: #fff;
+					@include center;
+					transform: translateY(-100%);
+					opacity: 0;
+					transition-duration: 0.2s;
+				}
+				&::before {
+					content: "SEND";
+					position: absolute;
+					top: 0;
+					left: 0;
+					height: 100%;
+					width: 100%;
+					color: #fff;
+					@include center;
+					transform: translateY(0%);
+					transition-duration: 0.2s;
+				}
+				&:hover::before {
+					transform: translateY(100%);
+					opacity: 0;
+				}
+				&:hover::after {
+					transform: translateY(0%);
+					opacity: 1;
+				}
+			}
+		}
+	}
+}

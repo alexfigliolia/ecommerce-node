@@ -1,0 +1,83 @@
+#pFilter {
+	margin-top: 50px;
+	@include center;
+	flex-direction: row;
+	&>h2 {
+		font-size: 5vh;
+		margin: 10px 25px;
+		&::after {
+			width: 0%;
+			left: -5%;
+			transition-duration: 0.2s;
+		}
+		&:hover::after{
+			width: 110%;
+		}
+	}
+}
+
+.shop-products:first-of-type {
+	padding-top:15px;
+	@media #{$mq-550}{
+		padding-bottom: 70px;
+	}
+	@media #{$mq-670}{
+		padding-top: 27.5px;
+	}
+	@media #{$mq-800} {
+		padding-bottom: 10px;
+	}
+}
+.shop-products:last-of-type {
+	padding-bottom: 80px;
+	@media #{$mq-800} {
+		padding-top: 20px;
+	}
+}
+.shop-products{
+	padding-bottom: 50px;
+	@media #{$mq-550}{
+		padding-bottom: 70px;
+	}
+	@media #{$mq-800}{
+		padding-bottom:20px;
+	}
+	&>.center {
+		@media #{$mq-800} {
+			display: flex;
+			justify-content: center;
+			flex-direction: row;
+			flex-wrap: wrap;
+			width: 100%;
+			height: auto;
+		}
+	}
+	&>h2{
+		@include headerShadow;
+		@include center;
+		text-align: center;
+		-webkit-background-clip: border-box;
+		-webkit-text-fill-color: #fff;
+		font-weight: 900;
+		font-family: "Playfair Display", sans-serif;
+		color: #fff;
+		width: 100%;
+		font-size: 6vh;
+		background: #EB3349; /* fallback for old browsers */
+		background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
+		background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	}
+	&>h2:first-of-type {
+		padding: 50px 0;
+	}
+}
+
+.shop-products .pc:after {
+  content: 'flickity';
+  display: none; /* hide :after */
+}
+@media screen and ( min-width: 800px ) {
+  .shop-products .pc:after {
+    content: '';
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "store",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "@moltin/sdk": "^2.8.0",
+    "axios": "^0.16.2",
+    "babel-runtime": "^6.20.0",
+    "bcrypt": "^1.0.3",
+    "flickity": "^2.0.10",
+    "meteor-node-stubs": "~0.2.4",
+    "moltin-util": "0.0.16",
+    "react": "^16.0.0",
+    "react-addons-pure-render-mixin": "^15.6.2",
+    "react-dom": "^16.0.0"
+  }
+}
