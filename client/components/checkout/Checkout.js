@@ -13,9 +13,12 @@ export default class Checkout extends Component {
 			shippingValidated: true,
 			billingValidated: true,
 			buttonClasses: "button",
-			orderSubmitted: false
+			orderSubmitted: false,
+			sameAsShipping: false
 		}
 		this.states = [ 'ALABAMA', 'ALASKA', 'AMERICAN SAMOA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'DISTRICT OF COLUMBIA', 'FEDERATED STATES OF MICRONESIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARSHALL ISLANDS', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'NORTHERN MARIANA ISLANDS', 'OHIO', 'OKLAHOMA', 'OREGON', 'PALAU', 'PENNSYLVANIA', 'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGIN ISLANDS', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'];
+		this.email = '';
+		this.name = '';
 	}
 
 	componentDidMount(){
@@ -50,10 +53,18 @@ export default class Checkout extends Component {
 					reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		let ev = reg.test(e);
 		if(ev && n.length >= 4) {
-			this.setState({
-				wantsGuest: true
+			Meteor.call('guest.setNameEmail', n, e, (error, result) => {
+				if(error) {
+					console.log(error);
+				} else {
+					this.setState({
+						wantsGuest: true
+					});
+					scrollIt( 0, 300, 'easeOutQuad' );
+					this.email = e;
+					this.name = n;
+				}
 			});
-			scrollIt( 0, 300, 'easeOutQuad' );
 		}
 	}
 
@@ -70,13 +81,15 @@ export default class Checkout extends Component {
 			this.refs.szip.value = "";
 		}
 		if(name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
-			this.setState({
-				displayBilling: true,
-				shippingValidated: true
+			Meteor.call('guest.setShipping', name, adl1, adl2, city, state, zip, (error, result) => {
+				this.setState({
+					displayBilling: true,
+					shippingValidated: true
+				});
+				setTimeout(() => {
+					scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' );
+				}, 200);
 			});
-			setTimeout(() => {
-				scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' );
-			}, 200);
 		} else {
 			this.setState({
 				shippingValidated: false
@@ -131,11 +144,12 @@ export default class Checkout extends Component {
 		this.setState({
 			buttonClasses: "button button-loads"
 		});
-		const number = this.refs.cr.value,
-					month = this.refs.month.value,
-					year = this.refs.year.value,
-					sec = this.refs.cv.value
-					name = this.refs.bname.value.replace(/[^a-zA-Z ]/g, ""),
+		let number = this.refs.cr.value,
+				month = this.refs.month.value,
+				year = this.refs.year.value,
+				sec = this.refs.cv.value;
+		if(!this.state.sameAsShipping) {
+			let name = this.refs.bname.value.replace(/[^a-zA-Z ]/g, ""),
 					adl1 = this.refs.badl1.value.replace(/[^a-zA-Z ]/g, ""),
 					adl2 = this.refs.badl2.value.replace(/[^a-zA-Z ]/g, ""),
 					city = this.refs.bcity.value.replace(/[^a-zA-Z ]/g, ""),
@@ -143,32 +157,64 @@ export default class Checkout extends Component {
 					zip = this.refs.bzip.value;
 					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
 					zipGood = zipReg.test(zip);
-		if(!zipGood) {
-			this.refs.bzip.value = "";
-		}
-		if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
-			setTimeout(() => {
-				this.setState({
-					billingValidated: true,
-					submittingOrder: true,
-					buttonClasses: "button button-loads button-good"
+			if(!zipGood) {
+				this.refs.bzip.value = "";
+			}
+			if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
+				Meteor.call('guest.setPayBilling', number, month, year, sec, name, adl1, adl2, city, state, zip, (error, result) => {
+					this.onSubmit();
 				});
-			}, 1000);
-			setTimeout(() => {
+			} else {
 				this.setState({
+					billingValidated: false,
 					buttonClasses: "button"
-				});
-			}, 3000);
-			setTimeout(() => {
-				this.setState({
-					orderSubmitted: true
-				});
-			}, 3500);
+				}, scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' ));
+			}
 		} else {
+			if(number !== '' && month !== '' && year !== '' && sec !== '') {
+				Meteor.call('guest.setPayBilling', number, month, year, sec, (error, result) => {
+					this.onSubmit();
+				});
+			} else {
+				this.setState({
+					billingValidated: false,
+					buttonClasses: "button"
+				}, scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' ));
+			}
+		}
+	}
+
+	noBilling = () => {
+		this.setState({
+			sameAsShipping: !this.state.sameAsShipping
+		})
+	}
+
+	onSubmit = () => {
+		setTimeout(() => {
 			this.setState({
-				billingValidated: false,
+				billingValidated: true,
+				submittingOrder: true,
+				buttonClasses: "button button-loads button-good"
+			});
+		}, 1000);
+		setTimeout(() => {
+			this.setState({
 				buttonClasses: "button"
-			}, scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' ));
+			});
+		}, 3000);
+		setTimeout(() => {
+			this.setState({
+				orderSubmitted: true
+			});
+		}, 3500);
+	}
+
+	signUp = (e) => {
+		e.persist();
+		if(this.refs.passcode.value !== "") {
+			this.props.signUp(this.name, this.email, this.refs.passcode.value);
+			this.props.nav(e);
 		}
 	}
 
@@ -372,72 +418,105 @@ export default class Checkout extends Component {
 										id="cv" />
 								</div>
 								<h3>Billing Info</h3>
-								<div className="input">
-									<label htmlFor="bname">Name</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="bname"
-										ref="bname" />
-								</div>
-								<div className="input">
-									<label htmlFor="badl1">Address line 1</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="badl1"
-										ref="badl1" />
-								</div>
-								<div className="input">
-									<label htmlFor="badl2">Address line 2</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="badl2"
-										ref="badl2" />
-								</div>
-								<div className="input">
-									<label htmlFor="bcity">City</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="bcity"
-										ref="bcity" />
-								</div>
-								<div className="input state">
-									<label htmlFor="bstate">State</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur}
-										onChange={this.autoCompleteState}
-										type="text" 
-										id="bstate"
-										ref="bstate" />
-									<div className="autocomp">
-										{
-											this.state.statesComplete2.map((state, i) => {
-												if(i < 4) return <div 
-																						onClick={this.autoCompClick}
-																						data-state={state}
-																						key={i}>{state}</div>
-											})
-										}
+								<div className="checkboxes">
+									<h4>Same as shipping?</h4>
+									<div>
+										<label>Yes</label>
+										<input 
+											type="checkbox" 
+											checked={this.state.sameAsShipping}
+											onChange={this.noBilling} />
+										<label>No</label>
+										<input 
+											type="checkbox" 
+											checked={!this.state.sameAsShipping}
+											onChange={this.noBilling} />
 									</div>
 								</div>
-								<div className="input zip">
-									<label htmlFor="bzip">Zipcode</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur}
-										maxLength="5" 
-										type="number" 
-										id="bzip"
-										ref="bzip" />
-								</div>
+								{
+									!this.state.sameAsShipping &&
+									<div className="input">
+										<label htmlFor="bname">Name</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="text" 
+											id="bname"
+											ref="bname" />
+									</div>
+								}
+								{
+									!this.state.sameAsShipping &&
+									<div className="input">
+										<label htmlFor="badl1">Address line 1</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="text" 
+											id="badl1"
+											ref="badl1" />
+									</div>
+								}
+								{
+									!this.state.sameAsShipping &&
+									<div className="input">
+										<label htmlFor="badl2">Address line 2</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="text" 
+											id="badl2"
+											ref="badl2" />
+									</div>
+								}
+								{
+									!this.state.sameAsShipping &&
+									<div className="input">
+										<label htmlFor="bcity">City</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="text" 
+											id="bcity"
+											ref="bcity" />
+									</div>
+								}
+								{
+									!this.state.sameAsShipping &&
+									<div className="input state">
+										<label htmlFor="bstate">State</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur}
+											onChange={this.autoCompleteState}
+											type="text" 
+											id="bstate"
+											ref="bstate" />
+										<div className="autocomp">
+											{
+												this.state.statesComplete2.map((state, i) => {
+													if(i < 4) return <div 
+																							onClick={this.autoCompClick}
+																							data-state={state}
+																							key={i}>{state}</div>
+												})
+											}
+										</div>
+									</div>
+								}
+								{
+									!this.state.sameAsShipping &&
+									<div className="input zip">
+										<label htmlFor="bzip">Zipcode</label>
+										<input
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur}
+											maxLength="5" 
+											type="number" 
+											id="bzip"
+											ref="bzip" />
+									</div>
+								}
 								<button 
 									className={this.state.buttonClasses}
 									onClick={this.submitOrder}>Submit Order</button>
@@ -445,15 +524,33 @@ export default class Checkout extends Component {
 						</div>
 					}
 				</div>
-				<div className="congrats" style={{display: (!this.state.orderSubmitted) ? "none" : "flex"}}>
-					<div>
-						<h2>Congrats!</h2>
-						<p>We have received your order! You will receive email confirmation from us shortly</p>
-						<button 
-							onClick={this.props.nav}
-							data-page="Home">Go Home</button>
-					</div>
-				</div>
+				{
+					(this.state.orderSubmitted && this.state.wantsGuest) ?
+						<div className="congrats">
+							<div>
+								<h2>Congrats!</h2>
+								<p>We have received your order! You will receive email confirmation from us shortly</p>
+								<p>In the meantime you may return home or enter a password below for a speedy checkout experence in the future</p>
+								<div>
+									<label htmlFor="pwc">Password</label>
+									<input 
+										onFocus={this.handleFocus}
+										onBlur={this.handleBlur}
+										id="pwc" 
+										ref="passcode"
+										type="password" />
+								</div>
+								<button 
+									onClick={this.props.nav}
+									data-page="Home">Go Home</button>
+								<button
+									data-page="Home" 
+									onClick={this.signUp}>Sign Up</button>
+							</div>
+						</div>
+					: 
+					""
+				}
 			</section>
 		);
 	}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { scrollIt } from '../helpers/helpers';
-import axios from 'axios';
 import Reveal from './components/Reveal';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
@@ -19,6 +18,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loggedIn: false,
       menuClasses: "menu",
       menuHide: true,
       moreClasses: "more-info",
@@ -45,6 +45,7 @@ class App extends Component {
       svProducts: [],
       homeProducts: []
     }
+    this.body = document.body;
   }
 
   componentWillMount() {
@@ -87,6 +88,25 @@ class App extends Component {
       setTimeout(() => { 
         this.setState({ revealClasses: "reveal" }); 
       }, 1000);
+    });
+  }
+
+  signUp = (n, e, p) => {
+    Accounts.createUser({name: n, email: e.toLowerCase(), password: p}, (err) => {
+      if(err){
+        // console.log(err.reason);
+      } else {
+        // console.log('creating new user');
+        Meteor.loginWithPassword(e, p, (err) => {
+          if(err) {
+            // console.log(err.reason);
+          } else {
+            this.setState({
+              loggedIn: true
+            });
+          }
+        });
+      }
     });
   }
 
@@ -142,6 +162,7 @@ class App extends Component {
   }
 
   toggleMore = (e) => {
+    this.body.classList.toggle('no-scroll');
     if(e.target.className === "more-back more-back-show") {
       this.handleMore();
       setTimeout(() => {
@@ -223,6 +244,12 @@ class App extends Component {
 
   navigate = (e) => {
     const page = e.target.dataset.page;
+    this.setState({
+      moreClasses: "more-info",
+      moreBackClasses: "more-back",
+      moreHide: true
+    });
+    this.body.classList.remove('no-scroll');
     if(page === this.state.page) {
       scrollIt(0, 300, 'easeOutQuad'); 
     } else {
@@ -271,81 +298,83 @@ class App extends Component {
   render = () => {
     return (
       <div className="App" >
-          <Reveal 
-            class={this.state.revealClasses} 
-            id='r4' 
-            text='GO!'/>
+        <Reveal 
+          class={this.state.revealClasses} 
+          id='r4' 
+          text='GO!'/>
 
-          <Header 
-            cartToggle={this.toggleCart}
-            nav={this.navigate} 
-            dot={this.state.cartProducts}
-            smallI={this.state.mgoatsS}
-            largeI={this.state.mgoatsL} 
-            page={this.state.page}
-            burgerStuff={this.state.burgerClasses} 
-            burger={this.toggleBurger} />
+        <Header 
+          cartToggle={this.toggleCart}
+          nav={this.navigate} 
+          dot={this.state.cartProducts}
+          smallI={this.state.mgoatsS}
+          largeI={this.state.mgoatsL} 
+          page={this.state.page}
+          burgerStuff={this.state.burgerClasses} 
+          burger={this.toggleBurger} />
 
-          <div id="pageBody">
-            {
-              (this.state.page === "Home") ? 
+        <div id="pageBody">
+          {
+            (this.state.page === "Home") ? 
 
-                <Home 
-                  nav={this.navigate} 
-                  more={this.toggleMore} 
-                  add={this.addItem}
-                  scrollTo={this.scrollTo}
-                  products={this.state.homeProducts} /> 
+              <Home 
+                nav={this.navigate} 
+                more={this.toggleMore} 
+                add={this.addItem}
+                scrollTo={this.scrollTo}
+                products={this.state.homeProducts} /> 
 
-              : (this.state.page === "Shop") ? 
+            : (this.state.page === "Shop") ? 
 
-                <Shop 
-                  more={this.toggleMore} 
-                  add={this.addItem}
-                  ovProducts={this.state.ovProducts} 
-                  pbProducts={this.state.pbProducts} 
-                  svProducts={this.state.svProducts} /> 
+              <Shop 
+                more={this.toggleMore} 
+                add={this.addItem}
+                ovProducts={this.state.ovProducts} 
+                pbProducts={this.state.pbProducts} 
+                svProducts={this.state.svProducts} /> 
 
-              : (this.state.page === "Contact") ? 
+            : (this.state.page === "Contact") ? 
 
-                <Contact />
+              <Contact />
 
-              : <Checkout
-                  nav={this.navigate} />
-            }
-          </div>
+            : <Checkout
+                nav={this.navigate}
+                signUp={this.signUp}
+                nav={this.navigate} />
+          }
+        </div>
 
-          <Footer nav={this.navigate} />
+        <Footer nav={this.navigate} />
 
-          <Menu 
-            classes={this.state.menuClasses}
-            page={this.state.page}
-            nav={this.navigate} 
-            toCart={this.toggleCart} />
+        <Menu 
+          classes={this.state.menuClasses}
+          page={this.state.page}
+          nav={this.navigate} 
+          toCart={this.toggleCart} />
 
-          <Cart 
-            classes={this.state.cartClasses} 
-            total={this.state.cartTotal} 
-            cartToggle={this.toggleCart} 
-            products={this.state.cartProducts} 
-            emptyCart={this.state.emptyCart} 
-            removeItem={this.removeItem}
-            nav={this.toCheckout} />
+        <Cart 
+          classes={this.state.cartClasses} 
+          total={this.state.cartTotal} 
+          cartToggle={this.toggleCart} 
+          products={this.state.cartProducts} 
+          emptyCart={this.state.emptyCart} 
+          removeItem={this.removeItem}
+          nav={this.toCheckout} />
 
-          <More 
-            classes={this.state.moreClasses} 
-            name={this.state.moreProductName}
-            description={this.state.moreProductDescription}
-            img={this.state.moreProductImg} 
-            price={this.state.moreProductPrice}
-            toggleMore={this.toggleMore} 
-            add={this.addItem} />
+        <More 
+          classes={this.state.moreClasses} 
+          name={this.state.moreProductName}
+          description={this.state.moreProductDescription}
+          img={this.state.moreProductImg} 
+          price={this.state.moreProductPrice}
+          toggleMore={this.toggleMore} 
+          add={this.addItem} />
 
-          <Swipe classes={this.state.swipeClasses} />
+        <Swipe classes={this.state.swipeClasses} />
 
-          <Moreback 
-            classes={this.state.moreBackClasses} 
-            toggleMore={this.toggleMore} />
+        <Moreback 
+          classes={this.state.moreBackClasses} 
+          toggleMore={this.toggleMore} />
 
       </div>
     );

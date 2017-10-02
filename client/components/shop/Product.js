@@ -25,31 +25,31 @@ class Product extends Component {
   render() {
     return (
       <div className='product' data-desc={this.props.desc} key={this.props.ident}>
-          <div className='p-img'>
-              <img 
-                  className='product-img' 
-                  src={this.props.image} 
-                  alt={this.props.name}
-                  onClick={this.props.more} />
+        <div className='p-img'>
+          <img 
+            className='product-img' 
+            src={this.props.image} 
+            alt={this.props.name}
+            onClick={this.props.more} />
 
-              <h3>{this.props.name}</h3>
-          </div>
-          <div className='p-buttons'>
-              <button 
-                  className='more' 
-                  data-text="MORE" 
-                  onClick={this.props.more}>
-              </button>
-              <button 
-                  onClick={this.props.add} 
-                  className='buy' 
-                  data-product={this.props.name} 
-                  data-price={this.props.price} 
-                  data-id={this.props.pid} 
-                  data-text="BUY">
-              </button>
-          </div>
-          <div className='price'>${this.props.price}</div>
+          <h3>{this.props.name}</h3>
+        </div>
+        <div className='p-buttons'>
+          <button 
+            className='more' 
+            data-text="MORE" 
+            onClick={this.props.more}>
+          </button>
+          <button 
+            onClick={this.props.add} 
+            className='buy' 
+            data-product={this.props.name} 
+            data-price={this.props.price} 
+            data-id={this.props.pid} 
+            data-text="BUY">
+          </button>
+        </div>
+        <div className='price'>${this.props.price}</div>
       </div>
     );
   }
