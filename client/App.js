@@ -49,29 +49,19 @@ class App extends Component {
   }
 
   componentWillMount() {
-    let pb = [],
-        ov = [],
-        sv = [];
     Meteor.call('products.get', (error, result) => {
       if(error) {
         console.log(error);
       } else {
-        for(var i = 0; i < result.result.length; i++) {
-          if(result.result[i].category.value === "Pasta & Biscotti") {
-            pb.push(result.result[i]);
-          }
-          if(result.result[i].category.value === "Oil & Vinegar") {
-            ov.push(result.result[i]);
-          }
-          if(result.result[i].category.value === "Sauces & Veggies") {
-            sv.push(result.result[i]);
-          }
-        }
+        const products = result.result;
+        const pb = products.filter(item => item.category.value === 'Pasta & Biscotti');
+        const ov = products.filter(item => item.category.value === 'Oil & Vinegar');
+        const sv = products.filter(item => item.category.value === 'Sauces & Veggies'); 
         this.setState({
           ovProducts: ov.reverse(),
           pbProducts: pb.reverse(),
           svProducts: sv.reverse(),
-          homeProducts: result.result.slice(12).reverse()
+          homeProducts: products.slice(12).reverse()
         });
       }
     });
@@ -201,10 +191,10 @@ class App extends Component {
   addItem = (e) => {
     if(this.state.cartHide === true && e.target.className === 'buy') {
       let cartItems = this.state.cartProducts, 
-          total = parseInt(this.state.cartTotal, 10),
-          cartItem = e.target.dataset.product,
-          pid = e.target.dataset.id,
-          itemPrice = parseInt(e.target.dataset.price, 10);
+          total = parseInt(this.state.cartTotal, 10);
+      const cartItem = e.target.dataset.product;
+      const pid = e.target.dataset.id;
+      const itemPrice = parseInt(e.target.dataset.price, 10);
       cartItems = cartItems.push([cartItem, itemPrice, pid]);
       total += itemPrice;
       this.setState({
@@ -221,9 +211,9 @@ class App extends Component {
 
   removeItem = (e) => {
     if(e.target.className === 'remove-item') {
-      const price = e.target.dataset.price,
-            index = e.target.dataset.index,
-            pid = e.target.dataset.id;
+      const price = e.target.dataset.price;
+      const index = e.target.dataset.index;
+      const pid = e.target.dataset.id;
       let cartItems = this.state.cartProducts,
           total = this.state.cartTotal;
       cartItems.splice(index, 1);
@@ -260,12 +250,11 @@ class App extends Component {
           this.setState({ revealClasses: "reveal reveal-show" }); 
         }, 500);
         setTimeout(() => { 
-          window.scrollTo(0, 0);
-          this.setState({ page: page });
+          this.setState({ page: page }, scrollIt(0, 0, 'easeOutQuad'));
         }, 700);
         setTimeout(() => { 
           this.setState({ revealClasses: "reveal" }); 
-        }, 1200);
+        }, 1500);
       } else {
         this.setState({ 
           revealClasses: "reveal reveal-show",
@@ -273,8 +262,7 @@ class App extends Component {
           cartHide: true
         }); 
         setTimeout(() => { 
-          this.setState({ page: page });
-          window.scrollTo(0, 0);
+          this.setState({ page: page }, scrollIt(0, 0, 'easeOutQuad'));
         }, 200);
         setTimeout(() => { 
           this.setState({ revealClasses: "reveal" }); 
