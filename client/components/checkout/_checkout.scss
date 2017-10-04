@@ -293,6 +293,32 @@
 			}
 		}
 	}
+	&>.logged-in-checkout{
+		@include center;
+		&>div {
+			@include center;
+			&>div {
+				@include center;
+				flex-direction: row;
+				&>p {
+					width: 80%;
+				}
+				&>div {
+					width: 80%;
+					text-align: center;
+				}
+				&>button {
+					width: 35%;
+				}
+				&>button:first-of-type {
+					margin-right: 2.5%;
+				}
+				&>button:last-of-type {
+					margin-left: 2.5%;
+				}
+			}
+		}
+	}
 }
 
 input[type='checkbox'] {

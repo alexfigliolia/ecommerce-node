@@ -14,11 +14,14 @@ export default class Checkout extends Component {
 			billingValidated: true,
 			buttonClasses: "button",
 			orderSubmitted: false,
-			sameAsShipping: false
+			sameAsShipping: false,
+			loginEValidated: true,
+			loginPValidated: true,
 		}
 		this.states = [ 'ALABAMA', 'ALASKA', 'AMERICAN SAMOA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'DISTRICT OF COLUMBIA', 'FEDERATED STATES OF MICRONESIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARSHALL ISLANDS', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'NORTHERN MARIANA ISLANDS', 'OHIO', 'OKLAHOMA', 'OREGON', 'PALAU', 'PENNSYLVANIA', 'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGIN ISLANDS', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'];
 		this.email = '';
 		this.name = '';
+		this.reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	}
 
 	componentDidMount(){
@@ -44,14 +47,18 @@ export default class Checkout extends Component {
 	}
 
 	handleLogin = () => {
-		this.login(this.refs.em.value, this.refs.pw.value);
+		const e = this.refs.em.value;
+		const pw = this.refs.pw.value;
+		let ev = this.reg.test(e);
+		if(ev && pw.length > 3) this.login(this.refs.em.value, this.refs.pw.value);
+		!ev ? this.setState({loginEValidated: false}) : this.setState({loginEValidated: true});
+		pw.length < 4 ? this.setState({loginPValidated: false}): this.setState({loginPValidated: true});
 	}
 
 	handleWantsGuest = () => {
-		const n = this.refs.name.value,
-					e = this.refs.email.value,
-					reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		let ev = reg.test(e);
+		const n = this.refs.name.value;
+		const e = this.refs.email.value;
+		let ev = this.reg.test(e);
 		if(ev && n.length >= 4) {
 			Meteor.call('guest.setNameEmail', n, e, (error, result) => {
 				if(error) {
@@ -221,280 +228,139 @@ export default class Checkout extends Component {
 	render = () => {
 		return (
 			<section className="checkout" style={{minHeight: this.state.height}}>
-				<div style={{display: (this.state.orderSubmitted) ? "none" : "flex"}}>
-					{
-						!this.state.wantsGuest &&
-						<div className="login">
-							<h2>Login</h2>
+				{
+					!this.props.loggedIn &&
+					<div style={{display: (this.state.orderSubmitted) ? "none" : "flex"}}>
+						{
+							!this.state.wantsGuest &&
+							<div className="login">
+								<h2>Login</h2>
+								<div>
+									{
+										!this.state.loginEValidated &&
+										<h3>Please enter a valid email</h3>
+									}
+									{
+										!this.state.loginPValidated &&
+										<h3>Your password must be at least 4 characters</h3>
+									}
+									<div className="input">
+										<label htmlFor="em">Email</label>
+										<input
+											ref="em"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="email" 
+											id="em" />
+									</div>
+									<div className="input">
+										<label htmlFor="pw">Password</label>
+										<input
+											ref="pw"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="password" 
+											id="pw" />
+									</div>
+									<button onClick={this.handleLogin}>Login</button>
+								</div>
+							</div>
+						}
+						<div className="guest">
+							<h2>Guest Checkout</h2>
 							<div>
+								{
+									!this.state.shippingValidated &&
+									<h3>*Please check your shipping info!*</h3>
+								}
 								<div className="input">
-									<label htmlFor="em">Email</label>
+									<label htmlFor="name">Full Name</label>
 									<input
-										ref="em"
+										onFocus={this.handleFocus}
+										onBlur={this.handleBlur} 
+										type="text" 
+										id="name"
+										ref="name" />
+								</div>
+								<div className="input">
+									<label htmlFor="email">Email</label>
+									<input
 										onFocus={this.handleFocus}
 										onBlur={this.handleBlur} 
 										type="email" 
-										id="em" />
-								</div>
-								<div className="input">
-									<label htmlFor="pw">Password</label>
-									<input
-										ref="pw"
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="password" 
-										id="pw" />
-								</div>
-								<button onClick={this.handleLogin}>Login</button>
-							</div>
-						</div>
-					}
-					<div className="guest">
-						<h2>Guest Checkout</h2>
-						<div>
-							{
-								!this.state.shippingValidated &&
-								<h3>*Please check your shipping info!*</h3>
-							}
-							<div className="input">
-								<label htmlFor="name">Full Name</label>
-								<input
-									onFocus={this.handleFocus}
-									onBlur={this.handleBlur} 
-									type="text" 
-									id="name"
-									ref="name" />
-							</div>
-							<div className="input">
-								<label htmlFor="email">Email</label>
-								<input
-									onFocus={this.handleFocus}
-									onBlur={this.handleBlur} 
-									type="email" 
-									id="email"
-									ref="email" />
-							</div>
-							{
-								this.state.wantsGuest &&
-								<h3>Shipping Info:</h3>
-							}
-
-							{
-								this.state.wantsGuest &&
-								<div className="input">
-									<label htmlFor="sname">Name</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="sname"
-										ref="sname" />
-								</div>
-							}
-
-							{
-								this.state.wantsGuest &&
-								<div className="input">
-									<label htmlFor="adl1">Address line 1</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="adl1"
-										ref="adl1" />
-								</div>
-							}
-							{
-								this.state.wantsGuest &&
-								<div className="input">
-									<label htmlFor="adl2">Address line 2</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="adl2"
-										ref="adl2" />
-								</div>
-							}
-							
-							{
-								this.state.wantsGuest &&
-								<div className="input">
-									<label htmlFor="scity">City</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="scity"
-										ref="scity" />
-								</div>
-							}
-
-							{
-								this.state.wantsGuest &&
-								<div className="input state">
-									<label htmlFor="sstate">State</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur}
-										onChange={this.autoCompleteState}
-										type="text" 
-										id="sstate"
-										ref="sstate" />
-									<div className="autocomp">
-										{
-											this.state.statesComplete.map((state, i) => {
-												if(i < 4) return <div 
-																						onClick={this.autoCompClick}
-																						data-state={state}
-																						key={i}>{state}</div>
-											})
-										}
-									</div>
-								</div>
-							}
-
-							{
-								this.state.wantsGuest && 
-								<div className="input zip">
-									<label htmlFor="szip">Zipcode</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur}
-										maxLength="5" 
-										type="number" 
-										id="szip"
-										ref="szip" />
-								</div>
-							}
-							<button onClick={!this.state.wantsGuest ? this.handleWantsGuest : this.toBilling}>Next</button>
-						</div>
-					</div>
-					{
-						this.state.displayBilling &&
-						<div className="billing">
-							<h2 id="bitle">Billing Info:</h2>
-							<div>
-							  {
-							  	!this.state.billingValidated &&
-							  	<h3>*Please check your inputs!</h3>
-							  }
-								<h3>Card Number</h3>
-								<div className="input">
-									<label htmlFor="cr">Credit/Debit</label>
-									<input
-										ref="cr"
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="number" 
-										id="cr" />
-								</div>
-								<h3>Expiration & Security</h3>
-								<div className="input month">
-									<label htmlFor="month">Month</label>
-									<input
-										ref="month"
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="number" 
-										id="month" />
-								</div>
-								<div className="input year">
-									<label htmlFor="year">Year</label>
-									<input
-										ref="year"
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="number" 
-										id="year" />
-								</div>
-								<div className="input cv">
-									<label htmlFor="cv">CVV</label>
-									<input
-										ref="cv"
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="number" 
-										id="cv" />
-								</div>
-								<h3>Billing Info</h3>
-								<div className="checkboxes">
-									<h4>Same as shipping?</h4>
-									<div>
-										<label>Yes</label>
-										<input 
-											type="checkbox" 
-											checked={this.state.sameAsShipping}
-											onChange={this.noBilling} />
-										<label>No</label>
-										<input 
-											type="checkbox" 
-											checked={!this.state.sameAsShipping}
-											onChange={this.noBilling} />
-									</div>
+										id="email"
+										ref="email" />
 								</div>
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest &&
+									<h3>Shipping Info:</h3>
+								}
+
+								{
+									this.state.wantsGuest &&
 									<div className="input">
-										<label htmlFor="bname">Name</label>
+										<label htmlFor="sname">Name</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur} 
 											type="text" 
-											id="bname"
-											ref="bname" />
+											id="sname"
+											ref="sname" />
 									</div>
 								}
+
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest &&
 									<div className="input">
-										<label htmlFor="badl1">Address line 1</label>
+										<label htmlFor="adl1">Address line 1</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur} 
 											type="text" 
-											id="badl1"
-											ref="badl1" />
+											id="adl1"
+											ref="adl1" />
 									</div>
 								}
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest &&
 									<div className="input">
-										<label htmlFor="badl2">Address line 2</label>
+										<label htmlFor="adl2">Address line 2</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur} 
 											type="text" 
-											id="badl2"
-											ref="badl2" />
+											id="adl2"
+											ref="adl2" />
 									</div>
 								}
+								
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest &&
 									<div className="input">
-										<label htmlFor="bcity">City</label>
+										<label htmlFor="scity">City</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur} 
 											type="text" 
-											id="bcity"
-											ref="bcity" />
+											id="scity"
+											ref="scity" />
 									</div>
 								}
+
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest &&
 									<div className="input state">
-										<label htmlFor="bstate">State</label>
+										<label htmlFor="sstate">State</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur}
 											onChange={this.autoCompleteState}
 											type="text" 
-											id="bstate"
-											ref="bstate" />
+											id="sstate"
+											ref="sstate" />
 										<div className="autocomp">
 											{
-												this.state.statesComplete2.map((state, i) => {
+												this.state.statesComplete.map((state, i) => {
 													if(i < 4) return <div 
 																							onClick={this.autoCompClick}
 																							data-state={state}
@@ -504,26 +370,192 @@ export default class Checkout extends Component {
 										</div>
 									</div>
 								}
+
 								{
-									!this.state.sameAsShipping &&
+									this.state.wantsGuest && 
 									<div className="input zip">
-										<label htmlFor="bzip">Zipcode</label>
+										<label htmlFor="szip">Zipcode</label>
 										<input
 											onFocus={this.handleFocus}
 											onBlur={this.handleBlur}
 											maxLength="5" 
 											type="number" 
-											id="bzip"
-											ref="bzip" />
+											id="szip"
+											ref="szip" />
 									</div>
 								}
-								<button 
-									className={this.state.buttonClasses}
-									onClick={this.submitOrder}>Submit Order</button>
+								<button onClick={!this.state.wantsGuest ? this.handleWantsGuest : this.toBilling}>Next</button>
 							</div>
 						</div>
-					}
-				</div>
+						{
+							this.state.displayBilling &&
+							<div className="billing">
+								<h2 id="bitle">Billing Info:</h2>
+								<div>
+								  {
+								  	!this.state.billingValidated &&
+								  	<h3>*Please check your inputs!</h3>
+								  }
+									<h3>Card Number</h3>
+									<div className="input">
+										<label htmlFor="cr">Credit/Debit</label>
+										<input
+											ref="cr"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="number" 
+											id="cr" />
+									</div>
+									<h3>Expiration & Security</h3>
+									<div className="input month">
+										<label htmlFor="month">Month</label>
+										<input
+											ref="month"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="number" 
+											id="month" />
+									</div>
+									<div className="input year">
+										<label htmlFor="year">Year</label>
+										<input
+											ref="year"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="number" 
+											id="year" />
+									</div>
+									<div className="input cv">
+										<label htmlFor="cv">CVV</label>
+										<input
+											ref="cv"
+											onFocus={this.handleFocus}
+											onBlur={this.handleBlur} 
+											type="number" 
+											id="cv" />
+									</div>
+									<h3>Billing Info</h3>
+									<div className="checkboxes">
+										<h4>Same as shipping?</h4>
+										<div>
+											<label>Yes</label>
+											<input 
+												type="checkbox" 
+												checked={this.state.sameAsShipping}
+												onChange={this.noBilling} />
+											<label>No</label>
+											<input 
+												type="checkbox" 
+												checked={!this.state.sameAsShipping}
+												onChange={this.noBilling} />
+										</div>
+									</div>
+									{
+										!this.state.sameAsShipping &&
+										<div className="input">
+											<label htmlFor="bname">Name</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur} 
+												type="text" 
+												id="bname"
+												ref="bname" />
+										</div>
+									}
+									{
+										!this.state.sameAsShipping &&
+										<div className="input">
+											<label htmlFor="badl1">Address line 1</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur} 
+												type="text" 
+												id="badl1"
+												ref="badl1" />
+										</div>
+									}
+									{
+										!this.state.sameAsShipping &&
+										<div className="input">
+											<label htmlFor="badl2">Address line 2</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur} 
+												type="text" 
+												id="badl2"
+												ref="badl2" />
+										</div>
+									}
+									{
+										!this.state.sameAsShipping &&
+										<div className="input">
+											<label htmlFor="bcity">City</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur} 
+												type="text" 
+												id="bcity"
+												ref="bcity" />
+										</div>
+									}
+									{
+										!this.state.sameAsShipping &&
+										<div className="input state">
+											<label htmlFor="bstate">State</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur}
+												onChange={this.autoCompleteState}
+												type="text" 
+												id="bstate"
+												ref="bstate" />
+											<div className="autocomp">
+												{
+													this.state.statesComplete2.map((state, i) => {
+														if(i < 4) return <div 
+																								onClick={this.autoCompClick}
+																								data-state={state}
+																								key={i}>{state}</div>
+													})
+												}
+											</div>
+										</div>
+									}
+									{
+										!this.state.sameAsShipping &&
+										<div className="input zip">
+											<label htmlFor="bzip">Zipcode</label>
+											<input
+												onFocus={this.handleFocus}
+												onBlur={this.handleBlur}
+												maxLength="5" 
+												type="number" 
+												id="bzip"
+												ref="bzip" />
+										</div>
+									}
+									<button 
+										className={this.state.buttonClasses}
+										onClick={this.submitOrder}>Submit Order</button>
+								</div>
+							</div>
+						}
+					</div>
+				}
+				{
+					this.props.loggedIn && 
+					<div className="logged-in-checkout">
+						<div>
+							<h2>Hello again!</h2>
+							<div>
+								<p>Would you like to submit your order with the info you have on file?</p>
+								<div>User's saved shipping address</div>
+								<button>Change Info</button>
+								<button>Submit Order</button>
+							</div>
+						</div>
+					</div>
+				}
 				{
 					(this.state.orderSubmitted && this.state.wantsGuest) ?
 						<div className="congrats">

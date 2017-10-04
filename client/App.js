@@ -100,6 +100,18 @@ class App extends Component {
     });
   }
 
+  login = (e, p) => {
+    Meteor.loginWithPassword(e, p, (err) => {
+      if(err) {
+        // console.log(err.reason);
+      } else {
+        this.setState({
+          loggedIn: true
+        });
+      }
+    });
+  }
+
   toggleBurger = () => {
     this.setState((prevState, prevProps) => {
       return {
@@ -326,9 +338,11 @@ class App extends Component {
               <Contact />
 
             : <Checkout
+                loggedIn={this.state.loggedIn}
                 nav={this.navigate}
                 signUp={this.signUp}
-                nav={this.navigate} />
+                nav={this.navigate}
+                login={this.login} />
           }
         </div>
 
