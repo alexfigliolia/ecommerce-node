@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ShippingInfo from './ShippingInfo';
 import BillingInfo from './BillingInfo';
+import OrderSubmitted from './OrderSubmitted';
 import { scrollIt, toTitleCase } from '../../../helpers/helpers';
 
 export default class Checkout extends Component {
@@ -45,9 +46,7 @@ export default class Checkout extends Component {
 	}
 
 	handleBlur = (e) => {
-		if(e.target.value === "") {
-			e.target.parentNode.classList.remove('focus');
-		}
+		if(e.target.value === "") e.target.parentNode.classList.remove('focus');
 	}
 
 	handleLogin = () => {
@@ -66,9 +65,7 @@ export default class Checkout extends Component {
 				if(error) {
 					console.log(error);
 				} else {
-					this.setState({
-						wantsGuest: true
-					});
+					this.setState({ wantsGuest: true });
 					scrollIt( 0, 300, 'easeOutQuad' );
 					this.email = e;
 					this.name = n;
@@ -88,9 +85,7 @@ export default class Checkout extends Component {
 					zip = context.szip.value;
 					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
 					zipGood = zipReg.test(zip);
-		if(!zipGood) {
-			context.szip.value = "";
-		}
+		if(!zipGood) context.szip.value = "";
 		if(name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 			Meteor.call('guest.setShipping', name, adl1, adl2, city, state, zip, (error, result) => {
 				this.setState({
@@ -102,9 +97,8 @@ export default class Checkout extends Component {
 				}, 200);
 			});
 		} else {
-			this.setState({
-				shippingValidated: false
-			}, scrollIt( 0, 300, 'easeOutQuad' ));
+			this.setState({ shippingValidated: false }, 
+			scrollIt( 0, 300, 'easeOutQuad' ));
 		}
 	}
 
@@ -140,20 +134,14 @@ export default class Checkout extends Component {
 		let s = e.target.dataset.state.toLowerCase();
 		e.target.parentNode.previousSibling.value = toTitleCase(s);
 		if(e.target.parentNode.previousSibling.id === 'sstate') {
-			this.setState({
-				statesComplete: []
-			});
+			this.setState({ statesComplete: [] });
 		} else {
-			this.setState({
-				statesComplete2: []
-			});
+			this.setState({ statesComplete2: [] });
 		}
 	}
 
 	submitOrder = (context) => {
-		this.setState({
-			buttonClasses: "button button-loads"
-		});
+		this.setState({ buttonClasses: "button button-loads" });
 		let number = context.cr.value,
 				month = context.month.value,
 				year = context.year.value,
@@ -167,9 +155,7 @@ export default class Checkout extends Component {
 					zip = context.bzip.value;
 					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
 					zipGood = zipReg.test(zip);
-			if(!zipGood) {
-				context.bzip.value = "";
-			}
+			if(!zipGood) context.bzip.value = "";
 			if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 				Meteor.call('guest.setPayBilling', number, month, year, sec, name, adl1, adl2, city, state, zip, (error, result) => {
 					this.onSubmit();
@@ -199,9 +185,7 @@ export default class Checkout extends Component {
 	}
 
 	noBilling = () => {
-		this.setState({
-			sameAsShipping: !this.state.sameAsShipping
-		})
+		this.setState({ sameAsShipping: !this.state.sameAsShipping });
 	}
 
 	onSubmit = () => {
@@ -212,22 +196,15 @@ export default class Checkout extends Component {
 				buttonClasses: "button button-loads button-good"
 			});
 		}, 1000);
-		setTimeout(() => {
-			this.setState({
-				buttonClasses: "button"
-			});
-		}, 3000);
-		setTimeout(() => {
-			this.setState({
-				orderSubmitted: true
-			});
-		}, 3500);
+		setTimeout(() => { this.setState({ buttonClasses: "button" }) }, 2000);
+		setTimeout(() => { this.setState({ orderSubmitted: true },
+			scrollIt( 0, 300, 'easeOutQuad' )) }, 2500);
 	}
 
-	signUp = (e) => {
+	signUp = (e, context) => {
 		e.persist();
-		if(this.refs.passcode.value !== "") {
-			this.props.signUp(this.name, this.email, this.refs.passcode.value);
+		if(context.passcode.value !== "") {
+			this.props.signUp(this.name, this.email, context.passcode.value);
 			this.props.nav(e);
 		}
 	}
@@ -321,28 +298,11 @@ export default class Checkout extends Component {
 				}
 				{
 					(this.state.orderSubmitted && this.state.wantsGuest) ?
-						<div className="congrats">
-							<div>
-								<h2>Congrats!</h2>
-								<p>We have received your order! You will receive email confirmation from us shortly</p>
-								<p>In the meantime you may return home or enter a password below for a speedy checkout experence in the future</p>
-								<div>
-									<label htmlFor="pwc">Password</label>
-									<input 
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur}
-										id="pwc" 
-										ref="passcode"
-										type="password" />
-								</div>
-								<button 
-									onClick={this.props.nav}
-									data-page="Home">Go Home</button>
-								<button
-									data-page="Home" 
-									onClick={this.signUp}>Sign Up</button>
-							</div>
-						</div>
+						<OrderSubmitted 
+							handleFocus={this.handleFocus}
+							handleBlur={this.handleBlur}
+							nav={this.props.nav}
+							signUp={this.signUp} />
 					: 
 					""
 				}

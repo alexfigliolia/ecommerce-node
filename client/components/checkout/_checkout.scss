@@ -348,7 +348,7 @@ input[type='checkbox'] {
     	left: 0%;
     	height: 100%;
     	width: 100%;
-    	background: #EB3349;
+    	background: linear-gradient(to left, #EB3349 , #F45C43);
     	border-radius: 3px;
     	border-radius: 50%;
     	transform: scale(0);
@@ -362,7 +362,7 @@ input[type='checkbox'] {
     	height: 100%;
     	width: 100%;
     	z-index: 2;
-    	background: #EB3349 url('cross2.svg') no-repeat center;
+    	background: url('cross2.svg') no-repeat center;
     	background-size: 80%;
     	transform: scale(0);
     	transition-duration: 0.1s;
