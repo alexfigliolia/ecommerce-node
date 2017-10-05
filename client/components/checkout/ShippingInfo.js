@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 
 export default class ShippingInfo extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
 
-		}
-	}
 	handleWantsGuest = () => {
 		const n = this.refs.name.value;
 		const e = this.refs.email.value;

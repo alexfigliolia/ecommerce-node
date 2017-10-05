@@ -20,5 +20,5 @@ react-meteor-data
 accounts-password@1.4.0
 fourseven:scss
 seba:minifiers-autoprefixer
-force-ssl@1.0.15
+force-ssl
 server-render@0.1.0

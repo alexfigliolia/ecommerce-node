@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ShippingInfo from './ShippingInfo';
+import BillingInfo from './BillingInfo';
 import { scrollIt, toTitleCase } from '../../../helpers/helpers';
 
 export default class Checkout extends Component {
@@ -108,7 +109,7 @@ export default class Checkout extends Component {
 	}
 
 	autoCompleteState = (e) => {
-		const input = e.target.id === "sstate" ? e.target.value : this.refs.bstate.value;
+		const input = e.target.value;
     let string = input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),
         matches = [];
     if(string !== '') {
@@ -137,38 +138,37 @@ export default class Checkout extends Component {
 
 	autoCompClick = (e) => {
 		let s = e.target.dataset.state.toLowerCase();
+		e.target.parentNode.previousSibling.value = toTitleCase(s);
 		if(e.target.parentNode.previousSibling.id === 'sstate') {
-			e.target.parentNode.previousSibling.value = toTitleCase(s);
 			this.setState({
 				statesComplete: []
 			});
 		} else {
-			this.refs.bstate.value = toTitleCase(s);
 			this.setState({
 				statesComplete2: []
 			});
 		}
 	}
 
-	submitOrder = () => {
+	submitOrder = (context) => {
 		this.setState({
 			buttonClasses: "button button-loads"
 		});
-		let number = this.refs.cr.value,
-				month = this.refs.month.value,
-				year = this.refs.year.value,
-				sec = this.refs.cv.value;
+		let number = context.cr.value,
+				month = context.month.value,
+				year = context.year.value,
+				sec = context.cv.value;
 		if(!this.state.sameAsShipping) {
-			let name = this.refs.bname.value.replace(/[^a-zA-Z ]/g, ""),
-					adl1 = this.refs.badl1.value.replace(/[^a-zA-Z ]/g, ""),
-					adl2 = this.refs.badl2.value.replace(/[^a-zA-Z ]/g, ""),
-					city = this.refs.bcity.value.replace(/[^a-zA-Z ]/g, ""),
-					state = this.refs.bstate.value.replace(/[^a-zA-Z ]/g, ""),
-					zip = this.refs.bzip.value;
+			let name = context.bname.value.replace(/[^a-zA-Z ]/g, ""),
+					adl1 = context.badl1.value.replace(/[^a-zA-Z ]/g, ""),
+					adl2 = context.badl2.value.replace(/[^a-zA-Z ]/g, ""),
+					city = context.bcity.value.replace(/[^a-zA-Z ]/g, ""),
+					state = context.bstate.value.replace(/[^a-zA-Z ]/g, ""),
+					zip = context.bzip.value;
 					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
 					zipGood = zipReg.test(zip);
 			if(!zipGood) {
-				this.refs.bzip.value = "";
+				context.bzip.value = "";
 			}
 			if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 				Meteor.call('guest.setPayBilling', number, month, year, sec, name, adl1, adl2, city, state, zip, (error, result) => {
@@ -291,156 +291,17 @@ export default class Checkout extends Component {
 							autoCompClick={this.autoCompClick} />
 						{
 							this.state.displayBilling &&
-							<div className="billing">
-								<h2 id="bitle">Billing Info:</h2>
-								<div>
-								  {
-								  	!this.state.billingValidated &&
-								  	<h3>*Please check your inputs!</h3>
-								  }
-									<h3>Card Number</h3>
-									<div className="input">
-										<label htmlFor="cr">Credit/Debit</label>
-										<input
-											ref="cr"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="number" 
-											id="cr" />
-									</div>
-									<h3>Expiration & Security</h3>
-									<div className="input month">
-										<label htmlFor="month">Month</label>
-										<input
-											ref="month"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="number" 
-											id="month" />
-									</div>
-									<div className="input year">
-										<label htmlFor="year">Year</label>
-										<input
-											ref="year"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="number" 
-											id="year" />
-									</div>
-									<div className="input cv">
-										<label htmlFor="cv">CVV</label>
-										<input
-											ref="cv"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="number" 
-											id="cv" />
-									</div>
-									<h3>Billing Info</h3>
-									<div className="checkboxes">
-										<h4>Same as shipping?</h4>
-										<div>
-											<label>Yes</label>
-											<input 
-												type="checkbox" 
-												checked={this.state.sameAsShipping}
-												onChange={this.noBilling} />
-											<label>No</label>
-											<input 
-												type="checkbox" 
-												checked={!this.state.sameAsShipping}
-												onChange={this.noBilling} />
-										</div>
-									</div>
-									{
-										!this.state.sameAsShipping &&
-										<div className="input">
-											<label htmlFor="bname">Name</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur} 
-												type="text" 
-												id="bname"
-												ref="bname" />
-										</div>
-									}
-									{
-										!this.state.sameAsShipping &&
-										<div className="input">
-											<label htmlFor="badl1">Address line 1</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur} 
-												type="text" 
-												id="badl1"
-												ref="badl1" />
-										</div>
-									}
-									{
-										!this.state.sameAsShipping &&
-										<div className="input">
-											<label htmlFor="badl2">Address line 2</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur} 
-												type="text" 
-												id="badl2"
-												ref="badl2" />
-										</div>
-									}
-									{
-										!this.state.sameAsShipping &&
-										<div className="input">
-											<label htmlFor="bcity">City</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur} 
-												type="text" 
-												id="bcity"
-												ref="bcity" />
-										</div>
-									}
-									{
-										!this.state.sameAsShipping &&
-										<div className="input state">
-											<label htmlFor="bstate">State</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur}
-												onChange={this.autoCompleteState}
-												type="text" 
-												id="bstate"
-												ref="bstate" />
-											<div className="autocomp">
-												{
-													this.state.statesComplete2.map((state, i) => {
-														if(i < 4) return <div 
-																								onClick={this.autoCompClick}
-																								data-state={state}
-																								key={i}>{state}</div>
-													})
-												}
-											</div>
-										</div>
-									}
-									{
-										!this.state.sameAsShipping &&
-										<div className="input zip">
-											<label htmlFor="bzip">Zipcode</label>
-											<input
-												onFocus={this.handleFocus}
-												onBlur={this.handleBlur}
-												maxLength="5" 
-												type="number" 
-												id="bzip"
-												ref="bzip" />
-										</div>
-									}
-									<button 
-										className={this.state.buttonClasses}
-										onClick={this.submitOrder}>Submit Order</button>
-								</div>
-							</div>
+							<BillingInfo
+								billingValidated={this.state.billingValidated}
+								sameAsShipping={this.state.sameAsShipping}
+								buttonClasses={this.state.buttonClasses}
+								statesComplete2={this.state.statesComplete2}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								autoCompleteState={this.autoCompleteState}
+								autoCompClick={this.autoCompClick}
+								submitOrder={this.submitOrder}
+								noBilling={this.noBilling} />
 						}
 					</div>
 				}
