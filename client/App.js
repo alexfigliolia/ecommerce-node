@@ -103,7 +103,6 @@ class App extends Component {
   login = (e, p) => {
     Meteor.loginWithPassword(e, p, (err) => {
       if(err) {
-        console.log(err.reason);
         this.setState({ loginErrors: err.reason });
       } else {
         this.setState({ loggedIn: true, loginErrors: "" });

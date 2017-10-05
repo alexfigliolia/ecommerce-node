@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import ShippingInfo from './ShippingInfo';
-import BillingInfo from './BillingInfo';
-import OrderSubmitted from './OrderSubmitted';
+import Login from './login/Login';
+import GuestCheckout from './guestCheckout/GuestCheckout';
+import ShippingInfo from './shippingInfo/ShippingInfo';
+import BillingInfo from './billingInfo/BillingInfo';
+import OrderSubmitted from './orderSubmitted/OrderSubmitted';
 import { scrollIt, toTitleCase } from '../../../helpers/helpers';
 
 export default class Checkout extends Component {
@@ -47,24 +49,24 @@ export default class Checkout extends Component {
 		if(e.target.value === "") e.target.parentNode.classList.remove('focus');
 	}
 
-	handleLogin = () => {
-		const e = this.refs.em.value;
-		const pw = this.refs.pw.value;
-		let ev = this.reg.test(e);
-		if(ev && pw.length > 3) this.props.login(this.refs.em.value, this.refs.pw.value);
+	handleLogin = (e, p) => {
+		const ev = this.reg.test(e);
+		if(ev && p.length > 3) this.props.login(e, p);
 		!ev ? this.setState({loginEValidated: false}) : this.setState({loginEValidated: true});
-		pw.length < 4 ? this.setState({loginPValidated: false}): this.setState({loginPValidated: true});
+		p.length < 4 ? this.setState({loginPValidated: false}): this.setState({loginPValidated: true});
 	}
 
-	handleWantsGuest = (n, e) => {
-		let ev = this.reg.test(e);
+	handleWantsGuest = (context) => {
+		const n = context.name.value;
+		const e = context.email.value;
+		const ev = this.reg.test(e);
 		if(ev && n.length >= 4) {
 			Meteor.call('guest.setNameEmail', n, e, (error, result) => {
 				if(error) {
 					console.log(error);
 				} else {
-					this.setState({ wantsGuest: true });
-					scrollIt( 0, 300, 'easeOutQuad' );
+					this.setState({ wantsGuest: true },
+						scrollIt( 0, 300, 'easeOutQuad' ));
 					this.email = e;
 					this.name = n;
 				}
@@ -75,35 +77,32 @@ export default class Checkout extends Component {
 	}
 
 	toBilling = (context) => {
-		const name = context.sname.value.replace(/[^a-zA-Z ]/g, ""),
-					adl1 = context.adl1.value.replace(/[^a-zA-Z ]/g, ""),
-					adl2 = context.adl2.value.replace(/[^a-zA-Z ]/g, ""),
-					city = context.scity.value.replace(/[^a-zA-Z ]/g, ""),
-					state = context.sstate.value.replace(/[^a-zA-Z ]/g, ""),
-					zip = context.szip.value;
-					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
-					zipGood = zipReg.test(zip);
+		const name = context.sname.value.replace(/[^a-zA-Z ]/g, "");
+		const adl1 = context.adl1.value.replace(/[^a-zA-Z ]/g, "");
+		const adl2 = context.adl2.value.replace(/[^a-zA-Z ]/g, "");
+		const city = context.scity.value.replace(/[^a-zA-Z ]/g, "");
+		const state = context.sstate.value.replace(/[^a-zA-Z ]/g, "");
+		const zip = context.szip.value;
+		const zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+		const zipGood = zipReg.test(zip);
 		if(!zipGood) context.szip.value = "";
 		if(name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 			Meteor.call('guest.setShipping', name, adl1, adl2, city, state, zip, (error, result) => {
-				this.setState({
-					displayBilling: true,
-					shippingValidated: true
-				});
+				this.setState({ displayBilling: true, shippingValidated: true });
 				setTimeout(() => {
 					scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' );
 				}, 200);
 			});
 		} else {
 			this.setState({ shippingValidated: false }, 
-			scrollIt( 0, 300, 'easeOutQuad' ));
+				scrollIt( 0, 300, 'easeOutQuad' ));
 		}
 	}
 
 	autoCompleteState = (e) => {
 		const input = e.target.value;
-    let string = input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),
-        matches = [];
+    const string = input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    let matches = [];
     if(string !== '') {
     	for(let i = 0; i < this.states.length; i++) {
         let s = this.states[i];
@@ -140,19 +139,19 @@ export default class Checkout extends Component {
 
 	submitOrder = (context) => {
 		this.setState({ buttonClasses: "button button-loads" });
-		let number = context.cr.value,
-				month = context.month.value,
-				year = context.year.value,
-				sec = context.cv.value;
+		const number = context.cr.value;
+		const month = context.month.value;
+		const year = context.year.value;
+		const sec = context.cv.value;
 		if(!this.state.sameAsShipping) {
-			let name = context.bname.value.replace(/[^a-zA-Z ]/g, ""),
-					adl1 = context.badl1.value.replace(/[^a-zA-Z ]/g, ""),
-					adl2 = context.badl2.value.replace(/[^a-zA-Z ]/g, ""),
-					city = context.bcity.value.replace(/[^a-zA-Z ]/g, ""),
-					state = context.bstate.value.replace(/[^a-zA-Z ]/g, ""),
-					zip = context.bzip.value;
-					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
-					zipGood = zipReg.test(zip);
+			const name = context.bname.value.replace(/[^a-zA-Z ]/g, "");
+			const adl1 = context.badl1.value.replace(/[^a-zA-Z ]/g, "");
+			const adl2 = context.badl2.value.replace(/[^a-zA-Z ]/g, "");
+			const city = context.bcity.value.replace(/[^a-zA-Z ]/g, "");
+			const state = context.bstate.value.replace(/[^a-zA-Z ]/g, "");
+			const zip = context.bzip.value;
+			const zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+			const zipGood = zipReg.test(zip);
 			if(!zipGood) context.bzip.value = "";
 			if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 				Meteor.call('guest.setPayBilling', number, month, year, sec, name, adl1, adl2, city, state, zip, (error, result) => {
@@ -180,6 +179,9 @@ export default class Checkout extends Component {
 
 	orderWithSavedInfo = () => {
 		//Place order with user object info
+		Meteor.call('user.placeOrder', (error, result) => {
+			this.setState({ orderSubmitted: true });
+		});
 	}
 
 	noBilling = () => {
@@ -217,57 +219,39 @@ export default class Checkout extends Component {
 					<div style={{display: (this.state.orderSubmitted) ? "none" : "flex"}}>
 						{
 							!this.state.wantsGuest &&
-							<div className="login">
-								<h2>Login</h2>
-								<div>
-									{
-										!this.state.loginEValidated &&
-										<h3>Please enter a valid email</h3>
-									}
-									{
-										!this.state.loginPValidated &&
-										<h3>Your password must be at least 4 characters</h3>
-									}
-									{
-										this.props.loginErrors !== "" &&
-										<h3>{this.props.loginErrors}</h3>
-									}
-									<div className="input">
-										<label htmlFor="em">Email</label>
-										<input
-											ref="em"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="email" 
-											id="em" />
-									</div>
-									<div className="input">
-										<label htmlFor="pw">Password</label>
-										<input
-											ref="pw"
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="password" 
-											id="pw" />
-									</div>
-									<button onClick={this.handleLogin}>Login</button>
-								</div>
-							</div>
+							<Login 
+								loginEValidated={this.state.loginEValidated}
+								loginPValidated={this.state.loginPValidated}
+								loginErrors={this.props.loginErrors}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								handleLogin={this.handleLogin} />
 						}
-						<ShippingInfo 
-							shippingValidated={this.state.shippingValidated}
-							guestNValidated={this.state.guestNValidated}
-							guestEValidated={this.state.guestEValidated}
-							wantsGuest={this.state.wantsGuest}
-							statesComplete={this.state.statesComplete}
-							updatingInfo={this.state.updatingInfo}
-							loggedIn={this.props.loggedIn}
-							handleFocus={this.handleFocus}
-							handleBlur={this.handleBlur}
-							autoCompleteState={this.autoCompleteState}
-							handleWantsGuest={this.handleWantsGuest}
-							toBilling={this.toBilling}
-							autoCompClick={this.autoCompClick} />
+						{
+							!this.state.wantsGuest &&
+							<GuestCheckout
+								guestNValidated={this.state.guestNValidated}
+								guestEValidated={this.state.guestEValidated}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								handleWantsGuest={this.handleWantsGuest} />
+						}
+						{
+							this.state.wantsGuest &&
+							<ShippingInfo 
+								shippingValidated={this.state.shippingValidated}
+								guestNValidated={this.state.guestNValidated}
+								guestEValidated={this.state.guestEValidated}
+								wantsGuest={this.state.wantsGuest}
+								statesComplete={this.state.statesComplete}
+								updatingInfo={this.state.updatingInfo}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								autoCompleteState={this.autoCompleteState}
+								handleWantsGuest={this.handleWantsGuest}
+								toBilling={this.toBilling}
+								autoCompClick={this.autoCompClick} />
+						}
 						{
 							this.state.displayBilling &&
 							<BillingInfo
@@ -282,23 +266,6 @@ export default class Checkout extends Component {
 								submitOrder={this.submitOrder}
 								noBilling={this.noBilling} />
 						}
-					</div>
-				}
-				{
-					this.props.loggedIn &&
-					!this.state.updatingInfo &&
-					!this.state.orderSubmitted &&
-					!this.state.submittingOrder && 
-					<div className="logged-in-checkout">
-						<div>
-							<h2>Hello again!</h2>
-							<div>
-								<p>Would you like to submit your order with the info you have on file?</p>
-								<div>User's saved shipping address</div>
-								<button onClick={this.displayUpdateInfo}>Change Info</button>
-								<button onClick={this.orderWithSavedInfo}>Submit Order</button>
-							</div>
-						</div>
 					</div>
 				}
 				{
@@ -329,18 +296,38 @@ export default class Checkout extends Component {
 								toBilling={this.toBilling}
 								autoCompClick={this.autoCompClick} />
 
-							<BillingInfo
-								billingValidated={this.state.billingValidated}
-								sameAsShipping={this.state.sameAsShipping}
-								buttonClasses={this.state.buttonClasses}
-								statesComplete2={this.state.statesComplete2}
-								handleFocus={this.handleFocus}
-								handleBlur={this.handleBlur}
-								autoCompleteState={this.autoCompleteState}
-								autoCompClick={this.autoCompClick}
-								submitOrder={this.submitOrder}
-								noBilling={this.noBilling} />
+							{
+								this.state.displayBilling &&
+								<BillingInfo
+									billingValidated={this.state.billingValidated}
+									sameAsShipping={this.state.sameAsShipping}
+									buttonClasses={this.state.buttonClasses}
+									statesComplete2={this.state.statesComplete2}
+									handleFocus={this.handleFocus}
+									handleBlur={this.handleBlur}
+									autoCompleteState={this.autoCompleteState}
+									autoCompClick={this.autoCompClick}
+									submitOrder={this.submitOrder}
+									noBilling={this.noBilling} />
+							}
+						</div>	
+				}
+				{
+					this.props.loggedIn &&
+					!this.state.updatingInfo &&
+					!this.state.orderSubmitted &&
+					!this.state.submittingOrder && 
+					<div className="logged-in-checkout">
+						<div>
+							<h2>Hello again!</h2>
+							<div>
+								<p>Would you like to submit your order with the info you have on file?</p>
+								<div>User's saved shipping address</div>
+								<button onClick={this.displayUpdateInfo}>Change Info</button>
+								<button onClick={this.orderWithSavedInfo}>Submit Order</button>
+							</div>
 						</div>
+					</div>
 				}
 			</section>
 		);

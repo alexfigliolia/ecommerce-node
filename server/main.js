@@ -97,6 +97,10 @@ Meteor.methods({
       state: state,
       zip: zip
     }
+  },
+
+  'user.placeOrder'(){
+    console.log('placed fake order!');
   }
 });
 

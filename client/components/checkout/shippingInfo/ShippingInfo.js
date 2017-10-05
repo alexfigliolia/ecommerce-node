@@ -2,12 +2,6 @@ import React, { Component } from 'react';
 
 export default class ShippingInfo extends Component {
 
-	handleWantsGuest = () => {
-		const n = this.refs.name.value;
-		const e = this.refs.email.value;
-		this.props.handleWantsGuest(n, e);
-	}
-
 	toBilling = () => {
 		this.props.toBilling(this.refs);
 	}
@@ -15,38 +9,12 @@ export default class ShippingInfo extends Component {
 	render = () => {
 		return(
 			<div className="guest">
-				<h2>{ !this.props.updatingInfo ? "Guest Checkout" : "Shipping Info:"}</h2>
+				<h2>Shipping Info:</h2>
 				<div>
 					{
 						!this.props.shippingValidated &&
 						<h3>*Please check your shipping info!*</h3>
 					}
-					{
-							!this.props.guestNValidated &&
-							<h3>Please enter your full name</h3>
-						}
-						{
-							!this.props.guestEValidated &&
-							<h3>Please enter a valid email</h3>
-						}
-					<div className="input">
-						<label htmlFor="name">Full Name</label>
-						<input
-							onFocus={this.props.handleFocus}
-							onBlur={this.props.handleBlur} 
-							type="text" 
-							id="name"
-							ref="name" />
-					</div>
-					<div className="input">
-						<label htmlFor="email">Email</label>
-						<input
-							onFocus={this.props.handleFocus}
-							onBlur={this.props.handleBlur} 
-							type="email" 
-							id="email"
-							ref="email" />
-					</div>
 					{
 						this.props.wantsGuest &&
 						<h3>Shipping Info:</h3>
@@ -146,7 +114,7 @@ export default class ShippingInfo extends Component {
 						</div>
 						: ""
 					}
-					<button onClick={!this.props.wantsGuest ? this.handleWantsGuest : this.toBilling}>Next</button>
+					<button onClick={this.toBilling}>Next</button>
 				</div>
 			</div>
 		);
