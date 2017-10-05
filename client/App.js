@@ -19,6 +19,7 @@ class App extends Component {
     super(props);
     this.state = {
       loggedIn: false,
+      loginErrors: "",
       menuClasses: "menu",
       menuHide: true,
       moreClasses: "more-info",
@@ -91,9 +92,7 @@ class App extends Component {
           if(err) {
             // console.log(err.reason);
           } else {
-            this.setState({
-              loggedIn: true
-            });
+            this.setState({ loggedIn: true });
           }
         });
       }
@@ -103,11 +102,10 @@ class App extends Component {
   login = (e, p) => {
     Meteor.loginWithPassword(e, p, (err) => {
       if(err) {
-        // console.log(err.reason);
+        console.log(err.reason);
+        this.setState({ loginErrors: err.reason });
       } else {
-        this.setState({
-          loggedIn: true
-        });
+        this.setState({ loggedIn: true, loginErrors: "" });
       }
     });
   }
@@ -264,9 +262,7 @@ class App extends Component {
         setTimeout(() => { 
           this.setState({ page: page }, scrollIt(0, 0, 'easeOutQuad'));
         }, 700);
-        setTimeout(() => { 
-          this.setState({ revealClasses: "reveal" }); 
-        }, 1500);
+        setTimeout(() => { this.setState({ revealClasses: "reveal" }) }, 1500);
       } else {
         this.setState({ 
           revealClasses: "reveal reveal-show",
@@ -286,13 +282,8 @@ class App extends Component {
   toCheckout = (e) => {
     history.pushState({page: 'Checkout'}, null, '/Checkout');
     e.persist();
-    this.setState({ 
-      cartClasses: "shopping-cart",
-      cartHide: true
-    }); 
-    setTimeout(() => {
-      this.navigate(e);
-    }, 500);
+    this.setState({  cartClasses: "shopping-cart", cartHide: true }); 
+    setTimeout(() => { this.navigate(e) }, 500);
   }
 
   render = () => {
@@ -339,6 +330,7 @@ class App extends Component {
 
             : <Checkout
                 loggedIn={this.state.loggedIn}
+                loginErrors={this.state.loginErrors}
                 nav={this.navigate}
                 signUp={this.signUp}
                 nav={this.navigate}

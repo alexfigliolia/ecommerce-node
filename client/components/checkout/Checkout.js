@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ShippingInfo from './ShippingInfo';
 import { scrollIt, toTitleCase } from '../../../helpers/helpers';
 
 export default class Checkout extends Component {
@@ -17,6 +18,8 @@ export default class Checkout extends Component {
 			sameAsShipping: false,
 			loginEValidated: true,
 			loginPValidated: true,
+			guestNValidated: true,
+			guestEValidated: true,
 		}
 		this.states = [ 'ALABAMA', 'ALASKA', 'AMERICAN SAMOA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'DISTRICT OF COLUMBIA', 'FEDERATED STATES OF MICRONESIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARSHALL ISLANDS', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'NORTHERN MARIANA ISLANDS', 'OHIO', 'OKLAHOMA', 'OREGON', 'PALAU', 'PENNSYLVANIA', 'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGIN ISLANDS', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'];
 		this.email = '';
@@ -50,14 +53,12 @@ export default class Checkout extends Component {
 		const e = this.refs.em.value;
 		const pw = this.refs.pw.value;
 		let ev = this.reg.test(e);
-		if(ev && pw.length > 3) this.login(this.refs.em.value, this.refs.pw.value);
+		if(ev && pw.length > 3) this.props.login(this.refs.em.value, this.refs.pw.value);
 		!ev ? this.setState({loginEValidated: false}) : this.setState({loginEValidated: true});
 		pw.length < 4 ? this.setState({loginPValidated: false}): this.setState({loginPValidated: true});
 	}
 
-	handleWantsGuest = () => {
-		const n = this.refs.name.value;
-		const e = this.refs.email.value;
+	handleWantsGuest = (n, e) => {
 		let ev = this.reg.test(e);
 		if(ev && n.length >= 4) {
 			Meteor.call('guest.setNameEmail', n, e, (error, result) => {
@@ -73,19 +74,21 @@ export default class Checkout extends Component {
 				}
 			});
 		}
+		n.length < 4 ? this.setState({guestNValidated: false}) : this.setState({guestNValidated: true});
+		!ev ? this.setState({guestEValidated: false}): this.setState({guestEValidated: true});
 	}
 
-	toBilling = () => {
-		const name = this.refs.sname.value.replace(/[^a-zA-Z ]/g, ""),
-					adl1 = this.refs.adl1.value.replace(/[^a-zA-Z ]/g, ""),
-					adl2 = this.refs.adl2.value.replace(/[^a-zA-Z ]/g, ""),
-					city = this.refs.scity.value.replace(/[^a-zA-Z ]/g, ""),
-					state = this.refs.sstate.value.replace(/[^a-zA-Z ]/g, ""),
-					zip = this.refs.szip.value;
+	toBilling = (context) => {
+		const name = context.sname.value.replace(/[^a-zA-Z ]/g, ""),
+					adl1 = context.adl1.value.replace(/[^a-zA-Z ]/g, ""),
+					adl2 = context.adl2.value.replace(/[^a-zA-Z ]/g, ""),
+					city = context.scity.value.replace(/[^a-zA-Z ]/g, ""),
+					state = context.sstate.value.replace(/[^a-zA-Z ]/g, ""),
+					zip = context.szip.value;
 					zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/,
 					zipGood = zipReg.test(zip);
 		if(!zipGood) {
-			this.refs.szip.value = "";
+			context.szip.value = "";
 		}
 		if(name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
 			Meteor.call('guest.setShipping', name, adl1, adl2, city, state, zip, (error, result) => {
@@ -105,7 +108,7 @@ export default class Checkout extends Component {
 	}
 
 	autoCompleteState = (e) => {
-		const input = e.target.id === "sstate" ? this.refs.sstate.value : this.refs.bstate.value;
+		const input = e.target.id === "sstate" ? e.target.value : this.refs.bstate.value;
     let string = input.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'),
         matches = [];
     if(string !== '') {
@@ -134,8 +137,8 @@ export default class Checkout extends Component {
 
 	autoCompClick = (e) => {
 		let s = e.target.dataset.state.toLowerCase();
-		if(e.target.parentNode.previousSibling === sstate) {
-			this.refs.sstate.value = toTitleCase(s);
+		if(e.target.parentNode.previousSibling.id === 'sstate') {
+			e.target.parentNode.previousSibling.value = toTitleCase(s);
 			this.setState({
 				statesComplete: []
 			});
@@ -191,6 +194,10 @@ export default class Checkout extends Component {
 		}
 	}
 
+	orderWithSavedInfo = () => {
+		//Place order with user object info
+	}
+
 	noBilling = () => {
 		this.setState({
 			sameAsShipping: !this.state.sameAsShipping
@@ -244,6 +251,10 @@ export default class Checkout extends Component {
 										!this.state.loginPValidated &&
 										<h3>Your password must be at least 4 characters</h3>
 									}
+									{
+										this.props.loginErrors !== "" &&
+										<h3>{this.props.loginErrors}</h3>
+									}
 									<div className="input">
 										<label htmlFor="em">Email</label>
 										<input
@@ -266,127 +277,18 @@ export default class Checkout extends Component {
 								</div>
 							</div>
 						}
-						<div className="guest">
-							<h2>Guest Checkout</h2>
-							<div>
-								{
-									!this.state.shippingValidated &&
-									<h3>*Please check your shipping info!*</h3>
-								}
-								<div className="input">
-									<label htmlFor="name">Full Name</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="text" 
-										id="name"
-										ref="name" />
-								</div>
-								<div className="input">
-									<label htmlFor="email">Email</label>
-									<input
-										onFocus={this.handleFocus}
-										onBlur={this.handleBlur} 
-										type="email" 
-										id="email"
-										ref="email" />
-								</div>
-								{
-									this.state.wantsGuest &&
-									<h3>Shipping Info:</h3>
-								}
-
-								{
-									this.state.wantsGuest &&
-									<div className="input">
-										<label htmlFor="sname">Name</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="text" 
-											id="sname"
-											ref="sname" />
-									</div>
-								}
-
-								{
-									this.state.wantsGuest &&
-									<div className="input">
-										<label htmlFor="adl1">Address line 1</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="text" 
-											id="adl1"
-											ref="adl1" />
-									</div>
-								}
-								{
-									this.state.wantsGuest &&
-									<div className="input">
-										<label htmlFor="adl2">Address line 2</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="text" 
-											id="adl2"
-											ref="adl2" />
-									</div>
-								}
-								
-								{
-									this.state.wantsGuest &&
-									<div className="input">
-										<label htmlFor="scity">City</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur} 
-											type="text" 
-											id="scity"
-											ref="scity" />
-									</div>
-								}
-
-								{
-									this.state.wantsGuest &&
-									<div className="input state">
-										<label htmlFor="sstate">State</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur}
-											onChange={this.autoCompleteState}
-											type="text" 
-											id="sstate"
-											ref="sstate" />
-										<div className="autocomp">
-											{
-												this.state.statesComplete.map((state, i) => {
-													if(i < 4) return <div 
-																							onClick={this.autoCompClick}
-																							data-state={state}
-																							key={i}>{state}</div>
-												})
-											}
-										</div>
-									</div>
-								}
-
-								{
-									this.state.wantsGuest && 
-									<div className="input zip">
-										<label htmlFor="szip">Zipcode</label>
-										<input
-											onFocus={this.handleFocus}
-											onBlur={this.handleBlur}
-											maxLength="5" 
-											type="number" 
-											id="szip"
-											ref="szip" />
-									</div>
-								}
-								<button onClick={!this.state.wantsGuest ? this.handleWantsGuest : this.toBilling}>Next</button>
-							</div>
-						</div>
+						<ShippingInfo 
+							shippingValidated={this.state.shippingValidated}
+							guestNValidated={this.state.guestNValidated}
+							guestEValidated={this.state.guestEValidated}
+							wantsGuest={this.state.wantsGuest}
+							statesComplete={this.state.statesComplete}
+							handleFocus={this.handleFocus}
+							handleBlur={this.handleBlur}
+							autoCompleteState={this.autoCompleteState}
+							handleWantsGuest={this.handleWantsGuest}
+							toBilling={this.toBilling}
+							autoCompClick={this.autoCompClick} />
 						{
 							this.state.displayBilling &&
 							<div className="billing">
@@ -551,7 +453,7 @@ export default class Checkout extends Component {
 								<p>Would you like to submit your order with the info you have on file?</p>
 								<div>User's saved shipping address</div>
 								<button>Change Info</button>
-								<button>Submit Order</button>
+								<button onClick={this.orderWithSavedInfo}>Submit Order</button>
 							</div>
 						</div>
 					</div>
