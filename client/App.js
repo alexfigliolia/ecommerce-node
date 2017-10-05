@@ -80,8 +80,7 @@ class App extends Component {
         this.setState({ revealClasses: "reveal" }); 
       }, 1000);
     });
-    const li = Meteor.user() !== null;
-    this.setState({ loggedIn: li });
+    this.setState({ loggedIn: Meteor.user() !== null });
   }
 
   signUp = (n, e, p) => {

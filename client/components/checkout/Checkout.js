@@ -261,6 +261,7 @@ export default class Checkout extends Component {
 							wantsGuest={this.state.wantsGuest}
 							statesComplete={this.state.statesComplete}
 							updatingInfo={this.state.updatingInfo}
+							loggedIn={this.props.loggedIn}
 							handleFocus={this.handleFocus}
 							handleBlur={this.handleBlur}
 							autoCompleteState={this.autoCompleteState}

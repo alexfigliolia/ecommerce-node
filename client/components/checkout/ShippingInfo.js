@@ -15,7 +15,7 @@ export default class ShippingInfo extends Component {
 	render = () => {
 		return(
 			<div className="guest">
-				<h2>{ this.props.updatingInfo ? "Guest Checkout" : "Shipping Info:"}</h2>
+				<h2>{ !this.props.updatingInfo ? "Guest Checkout" : "Shipping Info:"}</h2>
 				<div>
 					{
 						!this.props.shippingValidated &&
