@@ -15,7 +15,7 @@ export default class ShippingInfo extends Component {
 	render = () => {
 		return(
 			<div className="guest">
-				<h2>Guest Checkout</h2>
+				<h2>{ this.props.updatingInfo ? "Guest Checkout" : "Shipping Info:"}</h2>
 				<div>
 					{
 						!this.props.shippingValidated &&
@@ -53,7 +53,7 @@ export default class ShippingInfo extends Component {
 					}
 
 					{
-						this.props.wantsGuest &&
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input">
 							<label htmlFor="sname">Name</label>
 							<input
@@ -63,10 +63,11 @@ export default class ShippingInfo extends Component {
 								id="sname"
 								ref="sname" />
 						</div>
+						:""
 					}
 
 					{
-						this.props.wantsGuest &&
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input">
 							<label htmlFor="adl1">Address line 1</label>
 							<input
@@ -76,9 +77,10 @@ export default class ShippingInfo extends Component {
 								id="adl1"
 								ref="adl1" />
 						</div>
+						:""
 					}
 					{
-						this.props.wantsGuest &&
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input">
 							<label htmlFor="adl2">Address line 2</label>
 							<input
@@ -88,10 +90,11 @@ export default class ShippingInfo extends Component {
 								id="adl2"
 								ref="adl2" />
 						</div>
+						: ""
 					}
 					
 					{
-						this.props.wantsGuest &&
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input">
 							<label htmlFor="scity">City</label>
 							<input
@@ -101,10 +104,11 @@ export default class ShippingInfo extends Component {
 								id="scity"
 								ref="scity" />
 						</div>
+						:""
 					}
 
 					{
-						this.props.wantsGuest &&
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input state">
 							<label htmlFor="sstate">State</label>
 							<input
@@ -125,10 +129,11 @@ export default class ShippingInfo extends Component {
 								}
 							</div>
 						</div>
+						:""
 					}
 
 					{
-						this.props.wantsGuest && 
+						(this.props.wantsGuest || this.props.updatingInfo) ?
 						<div className="input zip">
 							<label htmlFor="szip">Zipcode</label>
 							<input
@@ -139,6 +144,7 @@ export default class ShippingInfo extends Component {
 								id="szip"
 								ref="szip" />
 						</div>
+						: ""
 					}
 					<button onClick={!this.props.wantsGuest ? this.handleWantsGuest : this.toBilling}>Next</button>
 				</div>

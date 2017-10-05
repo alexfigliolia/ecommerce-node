@@ -22,6 +22,8 @@ export default class Checkout extends Component {
 			loginPValidated: true,
 			guestNValidated: true,
 			guestEValidated: true,
+			submittingOrder: false,
+			updatingInfo: false
 		}
 		this.states = [ 'ALABAMA', 'ALASKA', 'AMERICAN SAMOA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'DISTRICT OF COLUMBIA', 'FEDERATED STATES OF MICRONESIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARSHALL ISLANDS', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'NORTHERN MARIANA ISLANDS', 'OHIO', 'OKLAHOMA', 'OREGON', 'PALAU', 'PENNSYLVANIA', 'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGIN ISLANDS', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'];
 		this.email = '';
@@ -34,16 +36,12 @@ export default class Checkout extends Component {
 		window.addEventListener('resize', (e) => {
 			clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        this.setState({
-          height: (window.innerHeight - 250) + "px"
-        });              
+        this.setState({ height: (window.innerHeight - 250) + "px" });              
       }, 250);
 		})
 	}
 
-	handleFocus = (e) => {
-		e.target.parentNode.classList.add('focus');
-	}
+	handleFocus = (e) => { e.target.parentNode.classList.add('focus') }
 
 	handleBlur = (e) => {
 		if(e.target.value === "") e.target.parentNode.classList.remove('focus');
@@ -193,7 +191,7 @@ export default class Checkout extends Component {
 			this.setState({
 				billingValidated: true,
 				submittingOrder: true,
-				buttonClasses: "button button-loads button-good"
+				buttonClasses: "button button-loads button-good",
 			});
 		}, 1000);
 		setTimeout(() => { this.setState({ buttonClasses: "button" }) }, 2000);
@@ -208,6 +206,8 @@ export default class Checkout extends Component {
 			this.props.nav(e);
 		}
 	}
+
+	displayUpdateInfo = () => { this.setState({ updatingInfo: true }) }
 
 	render = () => {
 		return (
@@ -260,6 +260,7 @@ export default class Checkout extends Component {
 							guestEValidated={this.state.guestEValidated}
 							wantsGuest={this.state.wantsGuest}
 							statesComplete={this.state.statesComplete}
+							updatingInfo={this.state.updatingInfo}
 							handleFocus={this.handleFocus}
 							handleBlur={this.handleBlur}
 							autoCompleteState={this.autoCompleteState}
@@ -283,28 +284,62 @@ export default class Checkout extends Component {
 					</div>
 				}
 				{
-					this.props.loggedIn && 
+					this.props.loggedIn &&
+					!this.state.updatingInfo &&
+					!this.state.orderSubmitted &&
+					!this.state.submittingOrder && 
 					<div className="logged-in-checkout">
 						<div>
 							<h2>Hello again!</h2>
 							<div>
 								<p>Would you like to submit your order with the info you have on file?</p>
 								<div>User's saved shipping address</div>
-								<button>Change Info</button>
+								<button onClick={this.displayUpdateInfo}>Change Info</button>
 								<button onClick={this.orderWithSavedInfo}>Submit Order</button>
 							</div>
 						</div>
 					</div>
 				}
 				{
-					(this.state.orderSubmitted && this.state.wantsGuest) ?
+					this.state.orderSubmitted && 
 						<OrderSubmitted 
+							loggedIn={this.props.loggedIn}
 							handleFocus={this.handleFocus}
 							handleBlur={this.handleBlur}
 							nav={this.props.nav}
 							signUp={this.signUp} />
-					: 
-					""
+				}
+				{
+					this.props.loggedIn &&
+					this.state.updatingInfo && 
+					!this.state.orderSubmitted &&
+						<div>
+							<ShippingInfo 
+								shippingValidated={this.state.shippingValidated}
+								guestNValidated={this.state.guestNValidated}
+								guestEValidated={this.state.guestEValidated}
+								wantsGuest={this.state.wantsGuest}
+								statesComplete={this.state.statesComplete}
+								updatingInfo={this.state.updatingInfo}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								autoCompleteState={this.autoCompleteState}
+								handleWantsGuest={this.handleWantsGuest}
+								toBilling={this.toBilling}
+								autoCompClick={this.autoCompClick} />
+
+							<BillingInfo
+								billingValidated={this.state.billingValidated}
+								sameAsShipping={this.state.sameAsShipping}
+								buttonClasses={this.state.buttonClasses}
+								statesComplete2={this.state.statesComplete2}
+								handleFocus={this.handleFocus}
+								handleBlur={this.handleBlur}
+								autoCompleteState={this.autoCompleteState}
+								autoCompClick={this.autoCompClick}
+								submitOrder={this.submitOrder}
+								noBilling={this.noBilling} />
+						</div>
 				}
 			</section>
 		);
