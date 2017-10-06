@@ -1,4 +1,4 @@
-header {
+.header {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -44,6 +44,11 @@ header {
 		display: none;
 	}
 }
+#burg {
+	transform: translateX(100%);
+	transition-duration: 0.3s;
+	transition-delay: 0.9s;
+}
 #toCart {
 	cursor: pointer;
 	background: url('cart3.svg') no-repeat center;
@@ -51,6 +56,15 @@ header {
 	position: relative;
 	@media #{$mq-800} {
 		order: 3;
+	}
+}
+
+.show-cart {
+	transform: translateX(-100%);
+	transition-duration: 0.3s;
+	transition-delay: 0.9s;
+	@media #{$mq-800} {
+		transform: translateX(0%);
 	}
 }
 .mgoats {
@@ -99,6 +113,9 @@ header {
 		@include center;
 		justify-content: center;
 		margin-right: 10px;
+		transform: translateX(70px);
+		transition-duration: 0.3s;
+		transition-delay: 0.9s;
 		// width: 50%;
 		&>h2,
 		&>a {
@@ -138,5 +155,13 @@ header {
 				display: none;
 			}
 		}
+	}
+}
+
+.header-show {
+	& #burg,
+	&>#hLinks,
+	& .show-cart {
+		transform: translateX(0%);
 	}
 }

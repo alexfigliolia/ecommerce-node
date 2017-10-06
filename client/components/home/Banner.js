@@ -1,9 +1,22 @@
 import React, {Component} from 'react';
 
 class Banner extends Component {
-    render(){
+  constructor(props) {
+    super(props);
+    this.state = {
+      classes: "banner"
+    }
+  }
+
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({ classes: "banner banner-show" });
+    }, 1000);
+  }
+
+  render = () => {
 		return(
-			<div className='banner' id='banner'>
+			<div className={this.state.classes} id='banner'>
         <div className='center'>
           <h1>Farm to table food products</h1>
           <div>

@@ -35,6 +35,9 @@
 			line-height: 1.1;
 			font-family: "Playfair Display", sans-serif;
 			font-weight: 900;
+			transform: translateY(-100%);
+			opacity: 0;
+			transition-duration: 0.3s;
 			@media #{$mq-670}{
 				font-size: 3em;
 			}
@@ -61,6 +64,10 @@
 				font-weight: 900;
 				letter-spacing: 1px;
 				border-radius: 2.5px;
+				transform: translateY(100%);
+				opacity: 0;
+				transition-duration: 0.3s;
+				transition-delay: 0.3s;
 				@media #{$mq-1070} {
 					width: 180px;
 					height: 60px;
@@ -125,6 +132,7 @@
 		background: url('down.svg') no-repeat center;
 		background-size: contain;
 		animation: jump 1.5s infinite;
+		transform: scale(0);
 	}
 }
 .reveal {
@@ -202,5 +210,13 @@
 	    	transform: scaleX(0);
 	    	transform-origin: 100% 50%;
 	    }	
+	}
+}
+
+.banner-show {
+	&>.center>h1,
+	&>.center>div>button {
+		transform: translateY(0%);
+		opacity: 1;
 	}
 }
