@@ -83,6 +83,10 @@
 	transform: scale(0);
 	transition-duration: 0.3s;
 	transition-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045);
+	@media #{$mq-670} {
+		top: 10px;
+		right: 3px;
+	}
 }
 .mgoats2 {
 	position: absolute;

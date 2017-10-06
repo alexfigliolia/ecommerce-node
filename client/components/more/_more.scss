@@ -209,7 +209,8 @@
 	transform: scale(0);
 	transition-delay: 0s;
 	@media #{$mq-670}{
-		left: 20%;
+		left: 10%;
+		top: 110px;
 	}
 	@media #{$mq-957}{
 		top: 20%;
