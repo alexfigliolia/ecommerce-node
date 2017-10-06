@@ -26,7 +26,11 @@
 		width: 90%;
 		@media #{$mq-550} {
 			height: 350px;
-			width: 350px;
+			// width: 350px;
+			width: 70%;
+		}
+		@media #{$mq-670} {
+			height: 400px;
 		}
 		@media #{$mq-957}{
 			display: flex;
@@ -53,6 +57,13 @@
 	position: relative;
 	border-radius: 4px;
 	@media #{$mq-550} {
+		height: 350px;
+		// width: 350px;
+	}
+	@media #{$mq-670} {
+		height: 400px;
+	}
+	@media #{$mq-957} {
 		height: 350px;
 		width: 350px;
 	}
@@ -229,6 +240,9 @@
 	margin-bottom: 60px;
 	font-family: "Raleway", sans-serif;
 	font-family: "Playfair Display", sans-serif;
+	@media #{$mq-670} {
+		margin-bottom: 80px;
+	}
 	&>button {
 		@include headerShadow;
 		outline: none;
