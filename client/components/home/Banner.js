@@ -32,7 +32,7 @@ class Banner extends Component {
                                  className='letter' 
                                  key={j}
                                  style={{
-                                  transitionDelay: inc/30 + 's'
+                                  transitionDelay: inc/50 + 's'
                                  }}>{letter}</div>
                       })
                     }
