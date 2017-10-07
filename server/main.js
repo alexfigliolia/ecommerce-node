@@ -16,7 +16,8 @@ const guestUser = {
   paymentInfo: {
     card: "",
     cvv: "",
-    expiration: "",
+    expirationMonth: "",
+    expirationYear: ""
   },
   billingInfo: {
     name: "",
@@ -40,6 +41,26 @@ Accounts.onCreateUser((options, user) => {
   user.billingInfo = guestUser.billingInfo;
   user.shippingInfo = guestUser.shippingInfo;
   return user;
+});
+
+Meteor.publish('userData', function() {
+  let currentUser;
+  currentUser = this.userId;
+  if (currentUser) {
+     return Meteor.users.find({
+        _id: currentUser
+     }
+     ,{
+       fields: {
+          "name" : 1,
+          "shippingInfo": 1,
+          "billingInfo": 1,
+          "paymentInfo": 1
+       }
+     });
+  } else {
+    return this.ready();
+  }
 });
 
 Meteor.methods({
@@ -87,7 +108,8 @@ Meteor.methods({
     guestUser.paymentInfo = {
       card: cr,
       cvv: sec,
-      expiration: month + '/' + year,
+      expirationMonth: month,
+      expirationYear: year
     }
     guestUser.billingInfo = {
       name: name,

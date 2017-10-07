@@ -22,24 +22,48 @@
 		flex-direction: column;
 		margin-bottom: 15vh;
 		width: 95%;
-		@media #{$mq-670} {
+		@media #{$mq-410} {
 			margin-bottom: 10vh;
 		}
-		&>h1 {
-			font-size: 2.3em;
-			text-align: center;
-			text-shadow: 0px 0px 2.5px #000, 0px 0px 5px #000, 0px 0px 10px #000;
+		@media #{$mq-670} {
+			margin-top: 10vh;
+		}
+		&>.heading-text {
+			@include center;
+			flex-wrap: wrap;
+			width: 100%;
 			margin-bottom: 20px;
-			font-weight:700;
-			width: 90%;
-			line-height: 1.1;
-			font-family: "Playfair Display", sans-serif;
-			font-weight: 900;
-			transform: translateY(-100%);
-			opacity: 0;
-			transition-duration: 0.3s;
-			@media #{$mq-670}{
-				font-size: 3em;
+			@media #{$mq-957} {	
+				perspective: 400;
+				transform-style: preserve-3d;
+			}
+			&>h1 {
+				font-size: 7.5vh;
+				text-align: center;
+				text-shadow: 0px 0px 2.5px #000, 0px 0px 5px #000, 0px 0px 10px #000;
+				font-weight:700;
+				line-height: 1.1;
+				font-family: "Playfair Display", sans-serif;
+				font-weight: 900;
+				margin: 0;
+				@include center;
+				flex-wrap: wrap;
+				@media #{$mq-670}{
+					font-size: 3em;
+				}
+				@media #{$mq-957}{
+					font-size: 9vh;
+				}
+				&>div {
+					opacity: 0;
+					transition-duration: 0.2s;
+					transform: translateY(-40px) scale(0);
+					transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+					@media #{$mq-957} {
+						transform-origin: 0% 50% -50px;
+						transform: translateY(80px) rotateX(180deg);
+					}
+				}
 			}
 		}
 		&>div {
@@ -67,7 +91,7 @@
 				transform: translateY(100%);
 				opacity: 0;
 				transition-duration: 0.3s;
-				transition-delay: 0.3s;
+				transition-delay: 1.2s;
 				@media #{$mq-1070} {
 					width: 180px;
 					height: 60px;
@@ -214,7 +238,10 @@
 }
 
 .banner-show {
-	&>.center>h1,
+	&>.center>.heading-text>h1>div {
+		transform: translateY(0px) rotateX(0deg);
+		opacity: 1;
+	}
 	&>.center>div>button {
 		transform: translateY(0%);
 		opacity: 1;

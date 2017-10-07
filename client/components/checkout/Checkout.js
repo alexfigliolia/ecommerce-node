@@ -43,6 +43,28 @@ export default class Checkout extends Component {
 		})
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if(nextProps !== this.props && nextProps.user === null){
+			this.setState({
+				wantsGuest: false,
+				statesComplete: [],
+				statesComplete2: [],
+				displayBilling: false,
+				shippingValidated: true,
+				billingValidated: true,
+				buttonClasses: "button",
+				orderSubmitted: false,
+				sameAsShipping: false,
+				loginEValidated: true,
+				loginPValidated: true,
+				guestNValidated: true,
+				guestEValidated: true,
+				submittingOrder: false,
+				updatingInfo: false
+			});
+		}
+	}
+
 	handleFocus = (e) => { e.target.parentNode.classList.add('focus') }
 
 	handleBlur = (e) => {
@@ -238,7 +260,7 @@ export default class Checkout extends Component {
 						}
 						{
 							this.state.wantsGuest &&
-							<ShippingInfo 
+							<ShippingInfo
 								shippingValidated={this.state.shippingValidated}
 								guestNValidated={this.state.guestNValidated}
 								guestEValidated={this.state.guestEValidated}
@@ -283,6 +305,8 @@ export default class Checkout extends Component {
 					!this.state.orderSubmitted &&
 						<div>
 							<ShippingInfo 
+								user={this.props.user}
+								loggedIn={this.props.loggedIn}
 								shippingValidated={this.state.shippingValidated}
 								guestNValidated={this.state.guestNValidated}
 								guestEValidated={this.state.guestEValidated}
@@ -299,6 +323,8 @@ export default class Checkout extends Component {
 							{
 								this.state.displayBilling &&
 								<BillingInfo
+									user={this.props.user}
+									loggedIn={this.props.loggedIn}
 									billingValidated={this.state.billingValidated}
 									sameAsShipping={this.state.sameAsShipping}
 									buttonClasses={this.state.buttonClasses}

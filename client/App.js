@@ -18,6 +18,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: null,
       loggedIn: false,
       loginErrors: "",
       menuClasses: "menu",
@@ -81,6 +82,15 @@ class App extends Component {
       }, 1000);
     });
     this.setState({ loggedIn: Meteor.user() !== null });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if(nextProps.user === null) {
+      this.setState({ loggedIn: false, user: null });
+    } else {
+      this.setState({ loggedIn: true, user: nextProps.user });
+    }
   }
 
   signUp = (n, e, p) => {
@@ -331,6 +341,7 @@ class App extends Component {
             : <Checkout
                 loggedIn={this.state.loggedIn}
                 loginErrors={this.state.loginErrors}
+                user={this.state.user}
                 nav={this.navigate}
                 signUp={this.signUp}
                 nav={this.navigate}

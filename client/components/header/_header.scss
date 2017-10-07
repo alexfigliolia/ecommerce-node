@@ -18,7 +18,7 @@
 	}
 	&>h1 {
 		font-size: 1.25em;
-		@media #{$mq-410}{
+		@media #{$mq-670}{
 			font-size: 2em;
 		}
 	}
@@ -47,7 +47,7 @@
 #burg {
 	transform: translateX(100%);
 	transition-duration: 0.3s;
-	transition-delay: 0.9s;
+	transition-delay: 1.2s;
 }
 #toCart {
 	cursor: pointer;
@@ -62,7 +62,7 @@
 .show-cart {
 	transform: translateX(-100%);
 	transition-duration: 0.3s;
-	transition-delay: 0.9s;
+	transition-delay: 1.2s;
 	@media #{$mq-800} {
 		transform: translateX(0%);
 	}
@@ -119,7 +119,7 @@
 		margin-right: 10px;
 		transform: translateX(70px);
 		transition-duration: 0.3s;
-		transition-delay: 0.9s;
+		transition-delay: 1.2s;
 		// width: 50%;
 		&>h2,
 		&>a {

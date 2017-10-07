@@ -3,9 +3,9 @@ import { createContainer } from 'meteor/react-meteor-data';
 import App from './App.js';
 
 export default AppContainer = createContainer(() => {
-  // const users = Meteor.subscribe('userData');
-  // const id = Meteor.userId();
-  // const user = Meteor.user();
+  const users = Meteor.subscribe('userData');
+  const id = Meteor.userId();
+  const user = Meteor.user();
   // const userSchedules = Meteor.subscribe('schedules');
   // const userEmployees = Meteor.subscribe('employees');
   // const userGroup = Meteor.subscribe('group');
@@ -19,8 +19,8 @@ export default AppContainer = createContainer(() => {
   // const employeesExist = employeesReady && !!employees;
   // const groupExists = groupReady && !!group;
   return {
-  //   id,
-  //   user,
+    id,
+    user,
   //   schedulesReady,
   //   employeesReady,
   //   groupReady,
