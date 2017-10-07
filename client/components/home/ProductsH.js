@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import Product from './Product';
 
-class ProductsH extends Component {
+export default class ProductsH extends Component {
 	render = () => {
 	  return(
       <div className='products'>
         <h2 className='strike'>Best Sellers</h2>
-        <div  ref='carousel' className='center pc' id='hc'>
+        <div 
+          ref='carousel' 
+          className='center pc' 
+          id='hc'>
           {
             this.props.products.map((product, i) => {
               return(
@@ -30,6 +33,4 @@ class ProductsH extends Component {
 		);
 	}
 }
-
-export default ProductsH;
 

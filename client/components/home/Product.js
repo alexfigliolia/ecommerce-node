@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Flickity from 'flickity';
 
-class Product extends Component {
+export default class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,10 +13,10 @@ class Product extends Component {
   componentDidMount(){  
     const carousel = document.getElementById('hc');
     const options = {
-            contain: true,
-            watchCSS: true,
-            setGallerySize : true
-          };
+      contain: true,
+      watchCSS: true,
+      setGallerySize : true
+    };
     this.flkty = new Flickity(carousel, options);
     this.flkty.on( 'select', () => {
       this.setState({ currentIndex: this.flkty.selectedIndex }, () => {
@@ -39,7 +39,6 @@ class Product extends Component {
   }
 
   render = () => {
-
     return (
       <div 
         className={this.state.classes} 
@@ -82,5 +81,3 @@ class Product extends Component {
     );
   }
 }
-
-export default Product;

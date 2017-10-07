@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 
 export default class OrderSubmitted extends Component {
-	constructor(props){
-		super(props);
-		this.state = {
-
-		}
-	}
-
+	
 	signUp = (e) => {
 		e.persist();
 		this.props.signUp(e, this.refs);

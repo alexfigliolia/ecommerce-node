@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class Banner extends Component {
+export default class Banner extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,14 +43,19 @@ class Banner extends Component {
             }
           </div>
           <div>
-            <button className='explore router' data-page='Shop' onClick={this.props.nav}></button>
-            <button id='toAbout' onClick={this.props.scrollTo}></button>
+            <button 
+              className='explore router' 
+              data-page='Shop' 
+              onClick={this.props.nav}></button>
+            <button 
+              id='toAbout' 
+              onClick={this.props.scrollTo}></button>
           </div>
         </div>
-        <button className="scroll" onClick={this.props.scrollTo}></button>
+        <button 
+          className="scroll" 
+          onClick={this.props.scrollTo}></button>
       </div>
 		);
 	}
 }
-
-export default Banner;

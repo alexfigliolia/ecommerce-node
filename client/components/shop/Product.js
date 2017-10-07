@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Flickity from 'flickity';
 
-class Product extends Component {
+export default class Product extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,6 +59,7 @@ class Product extends Component {
       this.setState({ classes: 'product' });
     }
   }
+
   componentWillUnmount() {
     if (this.flkty0 || this.flkty1 || this.flkty2) {
       this.flkty0.destroy();
@@ -66,7 +67,8 @@ class Product extends Component {
       this.flkty2.destroy();
     }
   }
-  render() {
+
+  render = () => {
     return (
       <div 
         className={this.state.classes} 
@@ -112,4 +114,3 @@ class Product extends Component {
   }
 }
 
-export default Product;

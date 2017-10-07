@@ -195,9 +195,7 @@ export default class Checkout extends Component {
 					});
 				}
 			} else {
-				this.setState({
-					billingValidated: false,
-					buttonClasses: "button"
+				this.setState({ billingValidated: false, buttonClasses: "button"
 				}, scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' ));
 			}
 		}
@@ -210,9 +208,7 @@ export default class Checkout extends Component {
 		});
 	}
 
-	noBilling = () => {
-		this.setState({ sameAsShipping: !this.state.sameAsShipping });
-	}
+	noBilling = () => this.setState({ sameAsShipping: !this.state.sameAsShipping });
 
 	onSubmit = () => {
 		setTimeout(() => {
@@ -237,9 +233,7 @@ export default class Checkout extends Component {
 
 	displayUpdateInfo = () => { 
 		this.setState({ updatingInfo: true }, () => {
-			setTimeout(() => {
-				scrollIt(0, 300, 'easeOutQuad');
-			}, 500)
+			setTimeout(() => { scrollIt(0, 300, 'easeOutQuad'); }, 500)
 		}) 
 	}
 
@@ -253,7 +247,9 @@ export default class Checkout extends Component {
 
 	render = () => {
 		return (
-			<section className="checkout" style={{minHeight: this.state.height}}>
+			<section 
+				className="checkout" 
+				style={{minHeight: this.state.height}}>
 				{
 					!this.props.loggedIn &&
 					<div style={{display: (this.state.orderSubmitted) ? "none" : "flex"}}>

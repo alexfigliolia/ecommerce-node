@@ -4,8 +4,8 @@ import About from './About.js';
 import ProductsH from './ProductsH.js';
 import Bigbutton from './Bigbutton.js';
 
-class Home extends Component {
-  render() {
+export default class Home extends Component {
+  render = () => {
     return (
       <div>
         <Banner 
@@ -26,5 +26,3 @@ class Home extends Component {
     );
   }
 }
-
-export default Home;

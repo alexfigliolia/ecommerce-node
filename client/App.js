@@ -14,7 +14,7 @@ import Shop from './components/shop/Shop';
 import Contact from './components/contact/Contact';
 import Checkout from './components/checkout/Checkout';
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,9 +77,7 @@ class App extends Component {
         this.setState({ "page" : e.state.page });
         window.scrollTo(0, 0);
       }, 200);
-      setTimeout(() => { 
-        this.setState({ revealClasses: "reveal" }); 
-      }, 1000);
+      setTimeout(() => { this.setState({ revealClasses: "reveal" }); }, 1000);
     });
     this.setState({ loggedIn: Meteor.user() !== null });
   }
@@ -91,6 +89,10 @@ class App extends Component {
     } else {
       this.setState({ loggedIn: true, user: nextProps.user });
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('popstate', (e) => {});
   }
 
   signUp = (n, e, p) => {
@@ -167,9 +169,7 @@ class App extends Component {
     }
   }
 
-  scrollTo = () => {
-    scrollIt( document.getElementById('abt'), 300, 'easeOutQuad' );
-  }
+  scrollTo = () => scrollIt(document.getElementById('abt'), 300, 'easeOutQuad');
 
   toggleMore = (e) => {
     this.body.classList.toggle('no-scroll');
@@ -282,9 +282,7 @@ class App extends Component {
         setTimeout(() => { 
           this.setState({ page: page }, scrollIt(0, 0, 'easeOutQuad'));
         }, 200);
-        setTimeout(() => { 
-          this.setState({ revealClasses: "reveal" }); 
-        }, 1000);
+        setTimeout(() => { this.setState({ revealClasses: "reveal" }); }, 1000);
       }
     }
   }
@@ -385,8 +383,6 @@ class App extends Component {
     );
   }
 }
-
-export default App;
 
 
 

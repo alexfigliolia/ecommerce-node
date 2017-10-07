@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Product from './Product';
 
-class Shop extends Component {
+export default class Shop extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +25,7 @@ class Shop extends Component {
             {
               this.state.text1.split('').map((letter, i) => {
                   inc += 1
-                  return letter === ' ' ? 
+                return letter === ' ' ? 
                   <div 
                     key={i} 
                     style={{transitionDelay: inc/50 + 's'}}>&nbsp;</div> 
@@ -107,5 +107,3 @@ class Shop extends Component {
     );
   }
 }
-
-export default Shop;

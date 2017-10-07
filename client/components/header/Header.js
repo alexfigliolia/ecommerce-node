@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Burger from './Burger.js';
 
-class Header extends Component {
+export default class Header extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -15,15 +15,23 @@ class Header extends Component {
     }, 1000);
   }
 
-	render() {
+	render = () => {
 		return(
 			<header
 				className={this.state.classes}>
-        <div className='show-cart' id='toCart' onClick={this.props.cartToggle}>
+        <div 
+          className='show-cart' 
+          id='toCart' 
+          onClick={this.props.cartToggle}>
           <div className={this.props.smallI}>{this.props.dot.length}</div>
         </div>
-        <h1 className='logo router' data-page='Home' onClick={this.props.nav}>Italia Presents</h1>
-        <Burger classes={this.props.burgerStuff} burger={this.props.burger}/>
+        <h1 
+          className='logo router' 
+          data-page='Home' 
+          onClick={this.props.nav}>Italia Presents</h1>
+        <Burger 
+          classes={this.props.burgerStuff} 
+          burger={this.props.burger} />
         <nav id='hLinks'>
           <h2 
           	className={this.props.page === "Home" ? 'router lHome hlink active' : 'router lHome hlink'} 
@@ -46,5 +54,3 @@ class Header extends Component {
 		);
 	}
 }
-
-export default Header
