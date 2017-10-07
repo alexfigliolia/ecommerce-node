@@ -56,12 +56,19 @@
 				}
 				&>div {
 					opacity: 0;
-					transition-duration: 0.2s;
+					transition-duration: 0.4s;
 					transform: translateY(-40px) scale(0);
 					transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 					@media #{$mq-957} {
-						transform-origin: 0% 50% -50px;
-						transform: translateY(80px) rotateX(180deg);
+						transform-origin: 0% 50%;
+						transform: translateY(20px) rotateX(180deg) scale(0);
+					}
+				}
+				&>div:nth-of-type(even) {
+					transform: translateY(40px) scale(0);
+					transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+					@media #{$mq-957} {
+						transform: translateY(-40px) rotateX(-180deg) scale(0);
 					}
 				}
 			}
@@ -238,8 +245,9 @@
 }
 
 .banner-show {
-	&>.center>.heading-text>h1>div {
-		transform: translateY(0px) rotateX(0deg);
+	&>.center>.heading-text>h1>div,
+	&>.center>.heading-text>h1>div:nth-of-type(even) {
+		transform: translateY(0px) rotateX(0deg) scale(1);
 		opacity: 1;
 	}
 	&>.center>div>button {

@@ -26,6 +26,7 @@ export default class ShippingInfo extends Component {
 			}, () => {
 				for(let ref in this.refs) {
 					this.refs[ref].focus();
+					this.refs[ref].blur();
 				}
 			});
 		}

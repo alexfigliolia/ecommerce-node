@@ -231,7 +231,13 @@ export default class Checkout extends Component {
 		}
 	}
 
-	displayUpdateInfo = () => { this.setState({ updatingInfo: true }) }
+	displayUpdateInfo = () => { 
+		this.setState({ updatingInfo: true }, () => {
+			setTimeout(() => {
+				scrollIt(0, 300, 'easeOutQuad');
+			}, 300)
+		}) 
+	}
 
 	render = () => {
 		return (
