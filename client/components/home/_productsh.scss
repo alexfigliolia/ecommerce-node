@@ -21,6 +21,10 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		font-weight: 900;
+		font-family: "Playfair Display", sans-serif;
+		@media #{$mq-670} {
+			font-size: 3em;
+		}
 	}
 	&>.center {
 		width: 90%;

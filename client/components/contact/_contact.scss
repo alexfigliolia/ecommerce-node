@@ -21,6 +21,10 @@
 			text-shadow: 0px 0px 5px #000, 0px 0px 5px #000;
 			font-weight: 900;
 			width: 90%;
+			font-size: 1.25em;
+			@media #{$mq-957} {
+				font-size: 1.75em;
+			}
 		}
 		&>h2:first-of-type {
 			margin-top: 1.25em;
@@ -30,9 +34,15 @@
 			background: #EB3349; /* fallback for old browsers */
 			background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
 			background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-			 -webkit-background-clip: text;
-			 -webkit-text-fill-color: transparent;
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
 			position: relative;
+			font-family: "Playfair Display", sans-serif;
+			font-size: 2.25em;
+			margin-top: 0.5em;
+			@media #{$mq-957} {
+				font-size: 3em;
+			}
 			&::after {
 				content: "";
 				position: absolute;
@@ -59,11 +69,11 @@
 			background-color: #fff;
 			@include headerShadow;
 			padding-top: 20px;
-			font-family: "Playfair Display", sans-serif;
+			font-family: "Raleway", sans-serif;
 			border-radius: 4px;
 			&>input {
 				color: #000;
-				width: 90%;
+				width: 80%;
 				max-width: 500px;
 				margin: 0.5em 0;
 				height: 30px;
@@ -79,7 +89,7 @@
 			&>textarea {
 				padding: 10px;
 				color: #000;
-				width: 90%;
+				width: 80%;
 				max-width: 500px;
 				height: 100px;
 				background: #fff;

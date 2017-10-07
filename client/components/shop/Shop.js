@@ -2,11 +2,39 @@ import React, { Component } from 'react';
 import Product from './Product';
 
 class Shop extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      classes: 'products shop-products',
+      text1: 'Sauces & Veggies'
+    }
+  }
+
+  componentDidMount(){
+    setTimeout(() => {
+      this.setState({ classes: "products shop-products shop-show" });
+    }, 500);
+  }
+
+  render = () => {
+    let inc = 0
     return (
       <div>
-        <div className='products shop-products'>
-          <h2>Sauces & Veggies</h2>
+        <div className={this.state.classes}>
+          <h2>
+            {
+              this.state.text1.split('').map((letter, i) => {
+                  inc += 1
+                  return letter === ' ' ? 
+                  <div 
+                    key={i} 
+                    style={{transitionDelay: inc/50 + 's'}}>&nbsp;</div> 
+                : <div 
+                    key={i}
+                    style={{transitionDelay: inc/50 + 's'}}>{letter}</div>
+              })
+            }
+          </h2>
           <div ref='carousel0' className='center pc' id='c1'>
             {
               this.props.svProducts.map((product, i) => {
@@ -22,6 +50,7 @@ class Shop extends Component {
                     add={this.props.add}
                     pid={product.id}
                     rf={i}
+                    delay={i}
                   />
                 );
               })

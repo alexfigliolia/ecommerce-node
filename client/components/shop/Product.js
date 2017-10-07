@@ -68,14 +68,19 @@ class Product extends Component {
   }
   render() {
     return (
-      <div className={this.state.classes} data-desc={this.props.desc} key={this.props.ident}>
+      <div 
+        className={this.state.classes} 
+        data-desc={this.props.desc} 
+        key={this.props.ident}
+        style={{
+          transitionDelay: this.props.delay !== undefined ? (0.7 + (this.props.delay/10)) + 's' : 'none'
+        }}>
         <div className='p-img'>
           <img 
             className='product-img' 
             src={this.props.image} 
             alt={this.props.name}
             onClick={this.props.more} />
-
           <h3>
             {
               this.props.name.split('').map((letter, i) => {

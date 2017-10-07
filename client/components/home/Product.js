@@ -39,6 +39,7 @@ class Product extends Component {
   }
 
   render = () => {
+
     return (
       <div 
         className={this.state.classes} 
