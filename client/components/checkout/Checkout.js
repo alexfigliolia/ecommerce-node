@@ -40,7 +40,7 @@ export default class Checkout extends Component {
       resizeTimer = setTimeout(() => {
         this.setState({ height: (window.innerHeight - 250) + "px" });              
       }, 250);
-		})
+		});
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -63,6 +63,15 @@ export default class Checkout extends Component {
 				updatingInfo: false
 			});
 		}
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', (e) => {
+			clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        this.setState({ height: (window.innerHeight - 250) + "px" });              
+      }, 250);
+		});
 	}
 
 	handleFocus = (e) => { e.target.parentNode.classList.add('focus') }
@@ -99,22 +108,18 @@ export default class Checkout extends Component {
 	}
 
 	toBilling = (context) => {
-		const name = context.sname.value.replace(/[^a-zA-Z ]/g, "");
-		const adl1 = context.adl1.value.replace(/[^a-zA-Z ]/g, "");
-		const adl2 = context.adl2.value.replace(/[^a-zA-Z ]/g, "");
-		const city = context.scity.value.replace(/[^a-zA-Z ]/g, "");
-		const state = context.sstate.value.replace(/[^a-zA-Z ]/g, "");
-		const zip = context.szip.value;
 		const zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-		const zipGood = zipReg.test(zip);
-		if(!zipGood) context.szip.value = "";
-		if(name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
-			Meteor.call('guest.setShipping', name, adl1, adl2, city, state, zip, (error, result) => {
-				this.setState({ displayBilling: true, shippingValidated: true });
-				setTimeout(() => {
-					scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' );
-				}, 200);
-			});
+		const zipGood = zipReg.test(context.zip);
+		if(context.name.length > 2 && context.adl1.length > 3 && context.city.length > 2 && context.state.length > 1 && zipGood) {
+			if(this.props.loggedIn) {
+				Meteor.call('user.setShipping', context.name, context.adl1, context.adl2, context.city, context.state, context.zip, (error, result) => {
+					if(error) { console.log(error); } else { this.setShippingCallBack(); }
+				});
+			} else {
+				Meteor.call('guest.setShipping', context.name, context.adl1, context.adl2, context.city, context.state, context.zip, (error, result) => {
+					if(error) { console.log(error); } else { this.setShippingCallBack(); }
+				});
+			}
 		} else {
 			this.setState({ shippingValidated: false }, 
 				scrollIt( 0, 300, 'easeOutQuad' ));
@@ -161,35 +166,34 @@ export default class Checkout extends Component {
 
 	submitOrder = (context) => {
 		this.setState({ buttonClasses: "button button-loads" });
-		const number = context.cr.value;
-		const month = context.month.value;
-		const year = context.year.value;
-		const sec = context.cv.value;
 		if(!this.state.sameAsShipping) {
-			const name = context.bname.value.replace(/[^a-zA-Z ]/g, "");
-			const adl1 = context.badl1.value.replace(/[^a-zA-Z ]/g, "");
-			const adl2 = context.badl2.value.replace(/[^a-zA-Z ]/g, "");
-			const city = context.bcity.value.replace(/[^a-zA-Z ]/g, "");
-			const state = context.bstate.value.replace(/[^a-zA-Z ]/g, "");
-			const zip = context.bzip.value;
 			const zipReg = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-			const zipGood = zipReg.test(zip);
-			if(!zipGood) context.bzip.value = "";
-			if(!isNaN(number) && !isNaN(month) && !isNaN(year) && !isNaN(sec) && name.length > 2 && adl1.length > 3 && city.length > 2 && state.length > 1 && zipGood) {
-				Meteor.call('guest.setPayBilling', number, month, year, sec, name, adl1, adl2, city, state, zip, (error, result) => {
-					this.onSubmit();
-				});
+			const zipGood = zipReg.test(context.zip);
+			if(!isNaN(context.card) && !isNaN(context.month) && !isNaN(context.year) && !isNaN(context.sec) && context.name.length > 2 && context.adl1.length > 3 && context.city.length > 2 && context.state.length > 1 && zipGood) {
+				if(this.props.loggedIn) {
+					Meteor.call('user.setPayBilling', context.card, context.month, context.year, context.sec, context.name, context.adl1, context.adl2, context.city, context.state, context.zip, (error, result) => {
+						if(error) { console.log(error); } else { this.onSubmit(); }
+					});
+				} else {
+					Meteor.call('guest.setPayBilling', context.card, context.month, context.year, context.sec, context.name, context.adl1, context.adl2, context.city, context.state, context.zip, (error, result) => {
+						if(error) { console.log(error); } else { this.onSubmit(); }
+					});
+				}
 			} else {
-				this.setState({
-					billingValidated: false,
-					buttonClasses: "button"
+				this.setState({ billingValidated: false, buttonClasses: "button"
 				}, scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' ));
 			}
 		} else {
-			if(number !== '' && month !== '' && year !== '' && sec !== '') {
-				Meteor.call('guest.setPayBilling', number, month, year, sec, (error, result) => {
-					this.onSubmit();
-				});
+			if(context.card !== '' && context.month !== '' && context.year !== '' && context.sec !== '') {
+				if(this.props.loggedIn) {
+					Meteor.call('user.setPayBilling', context.card, context.month, context.year, context.sec, (error, result) => {
+						if(error) { console.log(error); } else { this.onSubmit(); }
+					});
+				} else {
+					Meteor.call('guest.setPayBilling', context.card, context.month, context.year, context.sec, (error, result) => {
+						if(error) { console.log(error); } else { this.onSubmit(); }
+					});
+				}
 			} else {
 				this.setState({
 					billingValidated: false,
@@ -235,8 +239,16 @@ export default class Checkout extends Component {
 		this.setState({ updatingInfo: true }, () => {
 			setTimeout(() => {
 				scrollIt(0, 300, 'easeOutQuad');
-			}, 300)
+			}, 500)
 		}) 
+	}
+
+	setShippingCallBack = () => {
+		this.setState({ displayBilling: true, shippingValidated: true }, () => {
+			setTimeout(() => {
+				scrollIt( (document.getElementById('bitle').offsetTop - 80), 300, 'easeOutQuad' );
+			}, 200);
+		});
 	}
 
 	render = () => {
@@ -278,7 +290,8 @@ export default class Checkout extends Component {
 								autoCompleteState={this.autoCompleteState}
 								handleWantsGuest={this.handleWantsGuest}
 								toBilling={this.toBilling}
-								autoCompClick={this.autoCompClick} />
+								autoCompClick={this.autoCompClick}
+								loggedIn={this.props.loggedIn} />
 						}
 						{
 							this.state.displayBilling &&
@@ -292,7 +305,8 @@ export default class Checkout extends Component {
 								autoCompleteState={this.autoCompleteState}
 								autoCompClick={this.autoCompClick}
 								submitOrder={this.submitOrder}
-								noBilling={this.noBilling} />
+								noBilling={this.noBilling}
+								loggedIn={this.props.loggedIn} />
 						}
 					</div>
 				}

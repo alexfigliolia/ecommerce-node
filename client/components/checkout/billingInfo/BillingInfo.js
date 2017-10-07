@@ -18,13 +18,28 @@ export default class BillingInfo extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			card: nextProps.loggedIn ? nextProps.user.paymentInfo.card : '',
+			month: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationMonth : '',
+			year: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationYear : '',
+			sec: nextProps.loggedIn ? nextProps.user.paymentInfo.cvv : '',
+			name: nextProps.loggedIn ? nextProps.user.billingInfo.name : '',
+			adl1: nextProps.loggedIn ? nextProps.user.billingInfo.address : '',
+			adl2: nextProps.loggedIn ? nextProps.user.billingInfo.address2 : '',
+			city: nextProps.loggedIn ? nextProps.user.billingInfo.city : '',
+			state: nextProps.loggedIn ? nextProps.user.billingInfo.state : '',
+			zip: nextProps.loggedIn ? nextProps.user.billingInfo.zip : ''
+		});
+	}
+
 	componentDidMount() {
 		if(this.props.loggedIn) {
 			this.setState({
 				card: this.props.user.paymentInfo.card,
 				month: this.props.user.paymentInfo.expirationMonth,
 				year: this.props.user.paymentInfo.expirationYear,
-				sec: this.props.user.billingInfo.cvv,
+				sec: this.props.user.paymentInfo.cvv,
 				name: this.props.user.billingInfo.name,
 				adl1: this.props.user.billingInfo.address,
 				adl2: this.props.user.billingInfo.address2,
@@ -69,7 +84,7 @@ export default class BillingInfo extends Component {
 
 	handleZipChange = (e) => this.setState({ zip: e.target.value });
 
-	submitOrder = () => this.props.submitOrder(this.refs);
+	submitOrder = () => this.props.submitOrder(this.state);
 	
 	render = () => {
 		return (

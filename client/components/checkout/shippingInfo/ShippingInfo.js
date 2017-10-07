@@ -14,6 +14,17 @@ export default class ShippingInfo extends Component {
 		}
 	}
 
+	componentWillReceiveProps(nextProps) {
+		this.setState({
+			name: nextProps.loggedIn ? nextProps.user.shippingInfo.name : '',
+			adl1: nextProps.loggedIn ? nextProps.user.shippingInfo.address : '',
+			adl2: nextProps.loggedIn ? nextProps.user.shippingInfo.address2 : '',
+			city: nextProps.loggedIn ? nextProps.user.shippingInfo.city : '',
+			state: nextProps.loggedIn ? nextProps.user.shippingInfo.state : '',
+			zip: nextProps.loggedIn ? nextProps.user.shippingInfo.zip : ''
+		});
+	}
+
 	componentDidMount() {
 		if(this.props.loggedIn) {
 			this.setState({
@@ -32,25 +43,15 @@ export default class ShippingInfo extends Component {
 		}
 	}
 
-	toBilling = () => {
-		this.props.toBilling(this.refs);
-	}
+	toBilling = () => this.props.toBilling(this.state);
 
-	handleNameChange = (e) => {
-		this.setState({ name: e.target.value });
-	}
+	handleNameChange = (e) => this.setState({ name: e.target.value });
 
-	handleAddressChange = (e) => {
-		this.setState({ adl1: e.target.value });
-	}
+	handleAddressChange = (e) => this.setState({ adl1: e.target.value });
 
-	handleAddress2Change = (e) => {
-		this.setState({ adl2: e.target.value });
-	}
+	handleAddress2Change = (e) => this.setState({ adl2: e.target.value });
 
-	handleCityChange = (e) => {
-		this.setState({ city: e.target.value });
-	}
+	handleCityChange = (e) => this.setState({ city: e.target.value });
 
 	handleStateChange = (e) => {
 		e.persist();
@@ -63,9 +64,7 @@ export default class ShippingInfo extends Component {
 		this.setState({ state: toTitleCase(s) }, this.props.autoCompClick(e));
 	}
 
-	handleZipChange = (e) => {
-		this.setState({ zip: e.target.value });
-	}
+	handleZipChange = (e) => this.setState({ zip: e.target.value });
 
 	render = () => {
 		return(

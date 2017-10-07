@@ -94,6 +94,27 @@ Meteor.methods({
     }
   },
 
+  'user.setShipping'(name, adl1, adl2, city, state, zip) {
+    check(name, String);
+    check(adl1, String);
+    check(adl2, String);
+    check(city, String);
+    check(state, String);
+    check(zip, String);
+    return Meteor.users.update(Meteor.userId(), {
+      $set: {
+        shippingInfo: {
+          name: name,
+          address: adl1,
+          address2: adl2,
+          city: city, 
+          state: state,
+          zip: zip
+        }
+      }
+    });
+  },
+
   'guest.setPayBilling'(cr, month, year, sec, name=guestUser.shippingInfo.name, adl1=guestUser.shippingInfo.address, adl2=guestUser.shippingInfo.address2, city=guestUser.shippingInfo.city, state=guestUser.shippingInfo.state, zip=guestUser.shippingInfo.zip){
     check(cr, String);
     check(month, String);
@@ -119,6 +140,37 @@ Meteor.methods({
       state: state,
       zip: zip
     }
+  },
+
+  'user.setPayBilling'(cr, month, year, sec, name=Meteor.user().shippingInfo.name, adl1=Meteor.user().shippingInfo.address, adl2=Meteor.user().shippingInfo.address2, city=Meteor.user().shippingInfo.city, state=Meteor.user().shippingInfo.state, zip=Meteor.user().shippingInfo.zip){
+    check(cr, String);
+    check(month, String);
+    check(year, String);
+    check(sec, String);
+    check(name, String);
+    check(adl1, String);
+    check(adl2, String);
+    check(city, String);
+    check(state, String);
+    check(zip, String);
+    return Meteor.users.update(Meteor.userId(), {
+      $set: {
+        billingInfo: {
+          name: name,
+          address: adl1,
+          address2: adl2,
+          city: city, 
+          state: state,
+          zip: zip
+        },
+        paymentInfo: {
+          card: cr,
+          cvv: sec,
+          expirationMonth: month,
+          expirationYear: year
+        }
+      }
+    });
   },
 
   'user.placeOrder'(){
