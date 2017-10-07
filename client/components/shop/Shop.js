@@ -12,15 +12,16 @@ class Shop extends Component {
               this.props.svProducts.map((product, i) => {
                 return(
                   <Product 
-                      name={product.title}
-                      desc={product.description}
-                      ident={product.title}
-                      key={i}
-                      price={product.price.data.rounded.with_tax}
-                      image={product.images[0].url.https}
-                      more={this.props.more}
-                      add={this.props.add}
-                      pid={product.id}
+                    name={product.title}
+                    desc={product.description}
+                    ident={product.title}
+                    key={i}
+                    price={product.price.data.rounded.with_tax}
+                    image={product.images[0].url.https}
+                    more={this.props.more}
+                    add={this.props.add}
+                    pid={product.id}
+                    rf={i}
                   />
                 );
               })
@@ -34,15 +35,16 @@ class Shop extends Component {
               this.props.ovProducts.map((product, i) => {
                 return(
                   <Product 
-                      name={product.title}
-                      desc={product.description}
-                      ident={product.title}
-                      key={i}
-                      price={product.price.data.rounded.with_tax}
-                      image={product.images[0].url.https}
-                      more={this.props.more}
-                      add={this.props.add}
-                      pid={product.id}
+                    name={product.title}
+                    desc={product.description}
+                    ident={product.title}
+                    key={i}
+                    price={product.price.data.rounded.with_tax}
+                    image={product.images[0].url.https}
+                    more={this.props.more}
+                    add={this.props.add}
+                    pid={product.id}
+                    rf={i}
                   />
                 );
               })
@@ -56,15 +58,16 @@ class Shop extends Component {
               this.props.pbProducts.map((product, i) => {
                 return(
                   <Product 
-                      name={product.title}
-                      desc={product.description}
-                      ident={product.title}
-                      key={i}
-                      price={product.price.data.rounded.with_tax}
-                      image={product.images[0].url.https}
-                      more={this.props.more}
-                      add={this.props.add}
-                      pid={product.id}
+                    name={product.title}
+                    desc={product.description}
+                    ident={product.title}
+                    key={i}
+                    price={product.price.data.rounded.with_tax}
+                    image={product.images[0].url.https}
+                    more={this.props.more}
+                    add={this.props.add}
+                    pid={product.id}
+                    rf={i}
                   />
                 );
               })

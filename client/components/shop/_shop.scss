@@ -46,7 +46,7 @@
 		padding-bottom:20px;
 	}
 	&>.center {
-		@media #{$mq-800} {
+		@media #{$mq-957} {
 			display: flex;
 			justify-content: center;
 			flex-direction: row;
@@ -79,7 +79,7 @@
   content: 'flickity';
   display: none; /* hide :after */
 }
-@media screen and ( min-width: 800px ) {
+@media screen and ( min-width: 957px ) {
   .shop-products .pc:after {
     content: '';
   }

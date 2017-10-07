@@ -81,6 +81,16 @@
 			margin: 0;
 			font-weight: 700;
 			font-family: "Playfair Display", sans-serif;
+			&>span {
+				transform: translateY(-30px);
+				opacity: 0;
+				transition: all 0.3s;
+				z-index: 2;
+				@media #{$mq-957} {
+					opacity: 1;
+					transform: translateY(0px);
+				}
+			}
 		}
 	}
 	&>.p-buttons {
@@ -150,6 +160,14 @@
 		}
 	}
 }
+
+.product-show {
+	&>.p-img>h3>span {
+		transform: translateY(0%);
+		opacity: 1;
+	}
+}
+
 .price {
 	@include center;
 	position: absolute;

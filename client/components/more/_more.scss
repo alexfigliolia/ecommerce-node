@@ -20,7 +20,7 @@
 		position: static;
 		height: 100%;
 		display: block;
-		@media #{$mq-957} {
+		@media #{$mq-800} {
 			@include center;
 			flex-wrap: wrap;
 			width: 100%;
@@ -47,7 +47,7 @@
 					left: 10%;
 				}
 			}
-			@media #{$mq-957} {
+			@media #{$mq-800} {
 				margin-bottom: 0;
 			}
 		}
@@ -62,7 +62,7 @@
 			opacity: 0;
 			transition-duration: 0.25s;
 			transition-delay: 0.2s;
-			@media #{$mq-957} {
+			@media #{$mq-800} {
 				margin: 0;
 				align-self: flex-start;
 				width: 50%;
@@ -88,14 +88,15 @@
 			transition-delay: 0.2s;
 			@include center;
 			flex-direction: column;
-			@media #{$mq-957} {
+			@media #{$mq-800} {
 				margin: 0;
-				width: 50%;
+				width: 40%;
 				align-self: flex-start;
 				max-width: 600px;
 				padding: 0;
 				margin-bottom: 70px;
 				margin-right: 20px;
+				padding: 10px;
 			}
 			&>p {
 				@include center;
