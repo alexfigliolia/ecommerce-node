@@ -19,18 +19,20 @@ export default class BillingInfo extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({
-			card: nextProps.loggedIn ? nextProps.user.paymentInfo.card : '',
-			month: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationMonth : '',
-			year: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationYear : '',
-			sec: nextProps.loggedIn ? nextProps.user.paymentInfo.cvv : '',
-			name: nextProps.loggedIn ? nextProps.user.billingInfo.name : '',
-			adl1: nextProps.loggedIn ? nextProps.user.billingInfo.address : '',
-			adl2: nextProps.loggedIn ? nextProps.user.billingInfo.address2 : '',
-			city: nextProps.loggedIn ? nextProps.user.billingInfo.city : '',
-			state: nextProps.loggedIn ? nextProps.user.billingInfo.state : '',
-			zip: nextProps.loggedIn ? nextProps.user.billingInfo.zip : ''
-		});
+		if(nextProps.loggedIn !== this.props.loggedIn) {
+			this.setState({
+				card: nextProps.loggedIn ? nextProps.user.paymentInfo.card : '',
+				month: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationMonth : '',
+				year: nextProps.loggedIn ? nextProps.user.paymentInfo.expirationYear : '',
+				sec: nextProps.loggedIn ? nextProps.user.paymentInfo.cvv : '',
+				name: nextProps.loggedIn ? nextProps.user.billingInfo.name : '',
+				adl1: nextProps.loggedIn ? nextProps.user.billingInfo.address : '',
+				adl2: nextProps.loggedIn ? nextProps.user.billingInfo.address2 : '',
+				city: nextProps.loggedIn ? nextProps.user.billingInfo.city : '',
+				state: nextProps.loggedIn ? nextProps.user.billingInfo.state : '',
+				zip: nextProps.loggedIn ? nextProps.user.billingInfo.zip : ''
+			});
+		}
 	}
 
 	componentDidMount() {

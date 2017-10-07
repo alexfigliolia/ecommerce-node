@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 
 export default class Cart extends Component {
-	render(){
+	render = () => {
 		return(
 			<div id='shoppingCart' className={this.props.classes}>
         <div className='center'>

@@ -10,7 +10,6 @@ export default class Contact extends Component {
   }
 
   componentDidMount(){
-    console.log('mounted');
     setTimeout(() => {
       this.setState({ classes: "contact-page contact-page-show" });
     }, 500);

@@ -15,14 +15,16 @@ export default class ShippingInfo extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({
-			name: nextProps.loggedIn ? nextProps.user.shippingInfo.name : '',
-			adl1: nextProps.loggedIn ? nextProps.user.shippingInfo.address : '',
-			adl2: nextProps.loggedIn ? nextProps.user.shippingInfo.address2 : '',
-			city: nextProps.loggedIn ? nextProps.user.shippingInfo.city : '',
-			state: nextProps.loggedIn ? nextProps.user.shippingInfo.state : '',
-			zip: nextProps.loggedIn ? nextProps.user.shippingInfo.zip : ''
-		});
+		if(this.props.loggedIn !== nextProps.loggedIn) {
+			this.setState({
+				name: nextProps.loggedIn ? nextProps.user.shippingInfo.name : '',
+				adl1: nextProps.loggedIn ? nextProps.user.shippingInfo.address : '',
+				adl2: nextProps.loggedIn ? nextProps.user.shippingInfo.address2 : '',
+				city: nextProps.loggedIn ? nextProps.user.shippingInfo.city : '',
+				state: nextProps.loggedIn ? nextProps.user.shippingInfo.state : '',
+				zip: nextProps.loggedIn ? nextProps.user.shippingInfo.zip : ''
+			});
+		}
 	}
 
 	componentDidMount() {

@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 
 export default class GuestCheckout extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			name: '',
+			email: ''
+		}
+	}
 
 	handleWantsGuest = () => {
-		this.props.handleWantsGuest(this.refs);
+		this.props.handleWantsGuest(this.state.name, this.state.email);
 	}
+
+	handleNameChange = (e) => this.setState({ name: e.target.value });
+
+	handleEmailChange = (e) => this.setState({ email: e.target.value }); 
 
 	render = () => {
 		return (
@@ -24,18 +35,22 @@ export default class GuestCheckout extends Component {
 						<input
 							onFocus={this.props.handleFocus}
 							onBlur={this.props.handleBlur} 
+							onChange={this.handleNameChange}
 							type="text" 
 							id="name"
-							ref="name" />
+							ref="name"
+							value={this.state.name} />
 					</div>
 					<div className="input">
 						<label htmlFor="email">Email</label>
 						<input
 							onFocus={this.props.handleFocus}
 							onBlur={this.props.handleBlur} 
+							onChange={this.handleEmailChange}
 							type="email" 
 							id="email"
-							ref="email" />
+							ref="email"
+							value={this.state.email} />
 					</div>
 					<button onClick={this.handleWantsGuest}>Next</button>
 				</div>

@@ -25,7 +25,9 @@ export default class Checkout extends Component {
 			guestNValidated: true,
 			guestEValidated: true,
 			submittingOrder: false,
-			updatingInfo: false
+			updatingInfo: false,
+			statesComplete: [],
+			statesComplete2: []
 		}
 		this.states = [ 'ALABAMA', 'ALASKA', 'AMERICAN SAMOA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE', 'DISTRICT OF COLUMBIA', 'FEDERATED STATES OF MICRONESIA', 'FLORIDA', 'GEORGIA', 'GUAM', 'HAWAII', 'IDAHO', 'ILLINOIS', 'INDIANA', 'IOWA', 'KANSAS', 'KENTUCKY', 'LOUISIANA', 'MAINE', 'MARSHALL ISLANDS', 'MARYLAND', 'MASSACHUSETTS', 'MICHIGAN', 'MINNESOTA', 'MISSISSIPPI', 'MISSOURI', 'MONTANA', 'NEBRASKA', 'NEVADA', 'NEW HAMPSHIRE', 'NEW JERSEY', 'NEW MEXICO', 'NEW YORK', 'NORTH CAROLINA', 'NORTH DAKOTA', 'NORTHERN MARIANA ISLANDS', 'OHIO', 'OKLAHOMA', 'OREGON', 'PALAU', 'PENNSYLVANIA', 'PUERTO RICO', 'RHODE ISLAND', 'SOUTH CAROLINA', 'SOUTH DAKOTA', 'TENNESSEE', 'TEXAS', 'UTAH', 'VERMONT', 'VIRGIN ISLANDS', 'VIRGINIA', 'WASHINGTON', 'WEST VIRGINIA', 'WISCONSIN', 'WYOMING'];
 		this.email = '';
@@ -66,12 +68,7 @@ export default class Checkout extends Component {
 	}
 
 	componentWillUnmount() {
-		window.removeEventListener('resize', (e) => {
-			clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(() => {
-        this.setState({ height: (window.innerHeight - 250) + "px" });              
-      }, 250);
-		});
+		window.removeEventListener('resize', (e) => {});
 	}
 
 	handleFocus = (e) => { e.target.parentNode.classList.add('focus') }
@@ -87,9 +84,7 @@ export default class Checkout extends Component {
 		p.length < 4 ? this.setState({loginPValidated: false}): this.setState({loginPValidated: true});
 	}
 
-	handleWantsGuest = (context) => {
-		const n = context.name.value;
-		const e = context.email.value;
+	handleWantsGuest = (n, e) => {
 		const ev = this.reg.test(e);
 		if(ev && n.length >= 4) {
 			Meteor.call('guest.setNameEmail', n, e, (error, result) => {
@@ -103,8 +98,7 @@ export default class Checkout extends Component {
 				}
 			});
 		}
-		n.length < 4 ? this.setState({guestNValidated: false}) : this.setState({guestNValidated: true});
-		!ev ? this.setState({guestEValidated: false}): this.setState({guestEValidated: true});
+		this.setState({ guestNValidated: n.length > 3, guestEValidated: ev });
 	}
 
 	toBilling = (context) => {
@@ -155,8 +149,6 @@ export default class Checkout extends Component {
 	}
 
 	autoCompClick = (e) => {
-		let s = e.target.dataset.state.toLowerCase();
-		e.target.parentNode.previousSibling.value = toTitleCase(s);
 		if(e.target.parentNode.previousSibling.id === 'sstate') {
 			this.setState({ statesComplete: [] });
 		} else {
