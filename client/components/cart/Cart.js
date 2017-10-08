@@ -1,13 +1,45 @@
 import React, {Component} from 'react';
 
 export default class Cart extends Component {
+
+  handleMouseEnter = () => {
+    document.body.style.overflow = 'hidden';
+  }
+
+  handleMouseLeave = () => {
+    document.body.style.overflow = 'auto';
+  }
+
 	render = () => {
 		return(
-			<div id='shoppingCart' className={this.props.classes}>
+			<div 
+        id='shoppingCart' 
+        className={this.props.classes}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}>
         <div className='center'>
-          <h1>My Cart</h1>
-          <div id='table' className='table' onClick={this.props.removeItem}>
-          	<h2 id='emptyCart' className={this.props.emptyCart}>Your cart is empty!</h2>
+          <h1>
+            {
+              'My Cart'.split('').map((letter, i) => {
+                if(letter === ' ') {
+                  return <div 
+                          key={i}
+                          style={{transitionDelay: (0.3 + (i/50)) + 's'}}>&nbsp;</div>
+                } {
+                  return <div 
+                          key={i}
+                          style={{transitionDelay: (0.3 + (i/50)) + 's'}}>{letter}</div>
+                }
+              })
+            }
+          </h1>
+          <div 
+            id='table' 
+            className='table' 
+            onClick={this.props.removeItem}>
+          	<h2 
+              id='emptyCart' 
+              className={this.props.emptyCart}>Your cart is empty!</h2>
             { 
               this.props.products.map(function(product, i, props) {
               	return (

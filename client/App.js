@@ -167,6 +167,14 @@ export default class App extends Component {
         }
       });
     }
+    if(!this.state.burgerToggle) {
+      this.setState({
+        burgerToggle: true,
+        burgerClasses: "hamburglar is-open",
+        menuClasses: "menu",
+        menuHide: true,
+      });
+    }
   }
 
   scrollTo = () => scrollIt(document.getElementById('abt'), 300, 'easeOutQuad');
@@ -339,6 +347,8 @@ export default class App extends Component {
             : <Checkout
                 loggedIn={this.state.loggedIn}
                 loginErrors={this.state.loginErrors}
+                cartProducts={this.state.cartProducts}
+                cartTotal={this.state.cartTotal}
                 user={this.state.user}
                 nav={this.navigate}
                 signUp={this.signUp}

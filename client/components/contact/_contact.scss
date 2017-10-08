@@ -84,9 +84,11 @@
 				content: "";
 				position: absolute;
 				top: 100%;
-				left: -10%;
+				left: 60%;
 				height: 1px;
-				width: 120%;
+				width: 0%;
+				transition-duration: 0.3s;
+				transition-delay: 1s;
 				background: #EB3349; /* fallback for old browsers */
 				background: -webkit-linear-gradient(to left, #EB3349 , #F45C43); /* Chrome 10-25, Safari 5.1-6 */
 				background: linear-gradient(to left, #EB3349 , #F45C43); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -199,6 +201,10 @@
 	&>#headings>h1>div:nth-of-type(even) {
 		transform: translateY(0px) rotateX(0deg) scale(1);
 		opacity: 1;
+	}
+	&>#headings>h1::after {
+		width: 120%;
+		left: -10%;
 	}
 	&>#headings>h2{
 		transform: translateY(0px);

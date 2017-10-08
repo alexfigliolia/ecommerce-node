@@ -173,8 +173,18 @@ Meteor.methods({
     });
   },
 
-  'user.placeOrder'(){
-    console.log('placed fake order!');
+  'user.placeOrder'(products, total){
+    console.log(products);
+    console.log(total);
+    check(products, Array);
+    check(total, Number);
+    let tots = 0;
+    let prods = '';
+    for(let i = 0; i<products.length; i++) {
+      tots += parseInt(products[i][1]);
+      prods += products[i][0] + ', ';
+    }
+    console.log('placed fake order for ' + tots + '! I bought ' + products.length + ' products: ' + prods);
   }
 });
 

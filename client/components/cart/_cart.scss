@@ -1,20 +1,26 @@
 .shopping-cart {
 	min-height: calc(100% - 50px);
-	overflow: scroll;
+	max-height: calc(100% - 50px);
 	width: 100%;
-	background: #F45C43;
+	@include backgroundLeft;
 	position: fixed;
 	top: 50px;
 	left: 0;
 	z-index: 1001;
+	-webkit-overflow-scrolling: touch;
 	@include center;
 	@include rightShadow;
 	color: #fff;
-	font-family: "Raleway", sans-serif;
+	font-family: "Playfair Display", sans-serif;
 	transform: scaleX(0);
 	transform-origin: 0% 50%;
 	transition-duration: 0.25s;
 	transition-delay: 0.25s;
+	@media #{$mq-670} {
+		max-height: calc(100% - 80px);
+		min-height: calc(100% - 80px);
+		top: 80px;
+	}
 	@media #{$mq-800} {
 		width: 500px;
 		@include leftShadow;
@@ -26,24 +32,66 @@
 		width: 100%;
 		@include center;
 		flex-direction: column;
-		margin-top: -10%;
+		margin-top: -17.5px;
 		&>h1 {
 			transform: translateY(75px);
 			opacity: 0;
 			transition-duration: 0.25s;
 			transition-delay: 0.075s;
+			margin-top: 0;
+			font-weight: 900;
+			@include center;
+			font-size: 2.5em;
+			margin-bottom: 10px;
+			@media #{$mq-957} {	
+				perspective: 400;
+				transform-style: preserve-3d;
+			}
+			&>div {
+				opacity: 0;
+				transition-duration: 0.3s;
+				transform: translateY(-40px) scale(0);
+				transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				@media #{$mq-957} {
+					transform-origin: 0% 50%;
+					transform: translateY(20px) rotateX(180deg) scale(0);
+				}
+			}
+			&>div:nth-of-type(even) {
+				transform: translateY(40px) scale(0);
+				transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				@media #{$mq-957} {
+					transform: translateY(-40px) rotateX(-180deg) scale(0);
+				}
+			}
 		}
 		&> .table {
-			@include center;
-			flex-direction: column;
+			// @include center;
+			// align-items: center;
+			// justify-content: flex-start;
+			// flex-direction: column;
 			width: 100%;
 			border-top: 2px solid #fff;
 			border-bottom: 2px solid #fff;
-			box-sizing: border-box;
 			transform: translateY(75px);
 			opacity: 0;
 			transition-duration: 0.25s;
 			transition-delay: 0.05s;
+			height: auto;
+			max-height: 215px;
+			overflow-y: scroll;
+			-webkit-overflow-scrolling: touch;
+			@media #{$mq-375} {
+				max-height: 280px;
+			}
+			@media #{$mq-410} {
+				max-height: 40vh;
+			}
+			&>h2 {
+				text-align: center;
+				font-family: "Raleway", sans-serif;
+				font-size: 1.2em;
+			}
 			&>.empty-cart-false {
 				display: none;
 			}
@@ -53,6 +101,8 @@
 				@include center;
 				justify-content: space-between;
 				flex-direction: row;
+				font-family: "Raleway", sans-serif;
+				margin: 10px auto;
 				@media #{$mq-550} {
 					width: 60%;
 					max-width: 500px;
@@ -73,7 +123,8 @@
 				}
 				&>h3 {
 					@include center;
-					font-size: 0.9em;
+					font-size: 0.95em;
+					margin: 0;
 					@media #{$mq-550} {
 						font-size: 1em;
 					}
@@ -85,13 +136,15 @@
 					@include center;
 					border: none;
 					outline: none;
-					height: 30px;
-					width: 30px;
+					// height: 30px;
+					// width: 30px;
+					padding: 12.5px;
 					background-color: #fff;
 					border-radius: 50%;
 					color: #000;
-					background: #fff url('cross.svg') no-repeat center;
-					background-size: 80% 80%;
+					border: 2px solid #fff;
+					background: url('close.svg') no-repeat center;
+					background-size: 70% 70%;
 					margin-right: 10px;
 				}
 			}
@@ -105,7 +158,9 @@
 			opacity: 0;
 			transition-duration: 0.25s;
 			transition-delay: 0.025s;
+			font-family: "Raleway", sans-serif;
 			&>h3 {
+				font-weight: 900;
 				margin: 0;
 			}
 		}
@@ -116,6 +171,7 @@
 			opacity: 0;
 			transition-duration: 0.25s;
 			transition-delay: 0s;
+			font-family: "Raleway", sans-serif;
 			&>button {
 				height: 40px;
 				width: 130px;
@@ -127,6 +183,7 @@
 				position: relative;
 				border-radius: 2.5px;
 				@include buttonShadow;
+				font-weight: 900;
 				&::after {
 					content: "BACK TO SHOP";
 					position: absolute;
@@ -165,9 +222,11 @@
 			&>#checkout {
 				&::after{
 					content: "CHECKOUT";
+					background: #F45C43;
 				}
 				&::before{
 					content: "CHECKOUT";
+					color: #EB3349;
 				}
 			}
 
@@ -180,9 +239,13 @@
 	transition-delay: 0s;
 	&>.center {
 		&>h1 {
-			transform: translateY(0px);
 			opacity: 1;
-			transition-delay: 0.175s;
+			transform: translateY(0px);
+			&>div,
+			&>div:nth-of-type(even) {
+				transform: translateY(0px) rotateX(0deg) scale(1);
+				opacity: 1;
+			}
 		}
 		&> .table {
 			transform: translateY(0px);

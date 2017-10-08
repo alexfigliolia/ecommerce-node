@@ -194,8 +194,10 @@ export default class Checkout extends Component {
 	}
 
 	orderWithSavedInfo = () => {
+		console.log(this.props.cartProducts);
+		console.log(this.props.cartTotal);
 		//Place order with user object info
-		Meteor.call('user.placeOrder', (error, result) => {
+		Meteor.call('user.placeOrder', this.props.cartProducts, this.props.cartTotal, (error, result) => {
 			this.setState({ orderSubmitted: true });
 		});
 	}
@@ -203,16 +205,22 @@ export default class Checkout extends Component {
 	noBilling = () => this.setState({ sameAsShipping: !this.state.sameAsShipping });
 
 	onSubmit = () => {
-		setTimeout(() => {
-			this.setState({
-				billingValidated: true,
-				submittingOrder: true,
-				buttonClasses: "button button-loads button-good",
-			});
-		}, 1000);
-		setTimeout(() => { this.setState({ buttonClasses: "button" }) }, 2000);
-		setTimeout(() => { this.setState({ orderSubmitted: true },
-			scrollIt( 0, 300, 'easeOutQuad' )) }, 2500);
+		Meteor.call('user.placeOrder', this.props.cartProducts, this.props.cartTotal, (error, result) => {
+			if(error) {
+				console.log(error);
+			} else {
+				setTimeout(() => {
+					this.setState({
+						billingValidated: true,
+						submittingOrder: true,
+						buttonClasses: "button button-loads button-good",
+					});
+				}, 1000);
+				setTimeout(() => { this.setState({ buttonClasses: "button" }) }, 2000);
+				setTimeout(() => { this.setState({ orderSubmitted: true },
+					scrollIt( 0, 300, 'easeOutQuad' )) }, 2500);
+			}
+		});
 	}
 
 	signUp = (e, context) => {
