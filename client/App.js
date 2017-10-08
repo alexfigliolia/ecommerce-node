@@ -84,10 +84,25 @@ export default class App extends Component {
 
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
-    if(nextProps.user === null) {
-      this.setState({ loggedIn: false, user: null });
-    } else {
-      this.setState({ loggedIn: true, user: nextProps.user });
+    if(nextProps !== this.props) {
+      if(nextProps.carts.length !== 0) {
+        var cart = [],
+            cartTotal = 0;
+        for(let i = 0; i < nextProps.carts[0].products.length; i++) {
+          cart.push(nextProps.carts[0].products[i][0]);
+          // console.log(nextProps.carts[0].products[i][0][1]);
+          cartTotal += nextProps.carts[0].products[i][0][1];
+        }
+      }
+      this.setState({ 
+        loggedIn: nextProps.user !== null ? true : false, 
+        user: nextProps.user,
+        cartProducts: cart !== undefined ? cart : [],
+        cartTotal: cartTotal !== undefined ? cartTotal : 0,
+        emptyCart: cartTotal === 0 || cartTotal === undefined ? "empty-cart" : "empty-cart empty-cart-false",
+        mgoatsS: cartTotal === 0 || cartTotal === undefined ? "mgoats" : "mgoats has-items",
+        mgoatsL: cartTotal === 0 || cartTotal === undefined ? "mgoats2" : "mgoats2 has-items"
+      });
     }
   }
 
@@ -106,6 +121,13 @@ export default class App extends Component {
             // console.log(err.reason);
           } else {
             this.setState({ loggedIn: true });
+            Meteor.call('user.createCart', (error, result) => {
+              if(error) {
+                console.log(error);
+              } else {
+                console.log(result);
+              }
+            }); 
           }
         });
       }
@@ -234,6 +256,15 @@ export default class App extends Component {
         mgoatsS: "mgoats has-items",
         mgoatsL: "mgoats2 has-items"
       });
+      if(this.state.loggedIn) {
+        Meteor.call('user.addToCart', [cartItem, itemPrice, pid], (error, result) => {
+          if(error) {
+            console.log(error);
+          } else {
+            console.log(result);
+          }
+        });
+      }
     }
   }
 
@@ -255,6 +286,15 @@ export default class App extends Component {
           emptyCart: "empty-cart",
           mgoatsS: "mgoats",
           mgoatsL: "mgoats2"
+        });
+      }
+      if(this.state.loggedIn) {
+        Meteor.call('user.removeFromCart', this.state.cartProducts[index], (error, result) => {
+          if(error) {
+            console.log(error);
+          } else {
+            console.log(result);
+          }
         });
       }
     }

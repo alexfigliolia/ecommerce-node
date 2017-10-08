@@ -54,9 +54,15 @@ export default class Product extends Component {
             <h3>
               {
                 this.props.name.split('').map((letter, i) => {
-                  return <span
-                           style={{transitionDelay: (i/20) + 's'}} 
+                  if(letter === ' ') {
+                    return <span
+                           style={{transitionDelay: (i/50) + 's'}} 
+                           key={i}>&nbsp;</span>
+                  } else {
+                    return <span
+                           style={{transitionDelay: (i/50) + 's'}} 
                            key={i}>{letter}</span>
+                  }
                 })
               }
             </h3>

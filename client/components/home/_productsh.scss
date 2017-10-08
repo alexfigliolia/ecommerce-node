@@ -85,14 +85,18 @@
 			margin: 0;
 			font-weight: 700;
 			font-family: "Playfair Display", sans-serif;
+			overflow: hidden;
+			@include center;
+			margin: 2.5px 0;
 			&>span {
-				transform: translateY(-30px);
-				opacity: 0;
-				transition: all 0.3s;
+				display: inline-block;
 				z-index: 2;
+				opacity: 0;
+				transition-duration: 0.3s;
+				transform: translateY(-100%);
 				@media #{$mq-957} {
+					transform: translateY(0%);
 					opacity: 1;
-					transform: translateY(0px);
 				}
 			}
 		}

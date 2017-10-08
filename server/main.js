@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Accounts } from 'meteor/accounts-base';
+import { Carts } from '../api/carts.js';
+import { Orders } from '../api/orders.js';
 import { check } from 'meteor/check';
 import { Moltin } from '@moltin/sdk';
 import MoltinUtil from 'moltin-util';
@@ -63,6 +65,24 @@ Meteor.publish('userData', function() {
   }
 });
 
+Meteor.publish('carts', function() {
+  let currentUser;
+  currentUser = this.userId;
+  if (currentUser) {
+     return Carts.find({
+        owner: currentUser
+     }
+     ,{
+       fields: {
+          "products": 1,
+          "total" : 1
+       }
+     });
+  } else {
+    return this.ready();
+  }
+});
+
 Meteor.methods({
 	'products.get'(){
 		return client.request(client.endpoints.PRODUCTS)
@@ -75,6 +95,28 @@ Meteor.methods({
     check(email, String);
     guestUser.name = name;
     guestUser.email = email;
+  },
+
+  'user.createCart'(){
+    return Carts.insert({owner: Meteor.userId(), products: []});
+  },
+
+  'user.addToCart'(product) {
+    check(product, Array);
+    return Carts.update({owner: Meteor.userId()}, {
+      $push: {
+        products: [product]
+      }
+    })
+  },
+
+  'user.removeFromCart'(product){
+    check(product, Array);
+    return Carts.update({owner: Meteor.userId()}, {
+      $pull: {
+        products: [product]
+      }
+    });
   },
 
   'guest.setShipping'(name, adl1, adl2, city, state, zip){
@@ -185,7 +227,19 @@ Meteor.methods({
       prods += products[i][0] + ', ';
     }
     console.log('placed fake order for ' + tots + '! I bought ' + products.length + ' products: ' + prods);
+  },
+
+  'orders.create'(prods, total, user){
+    check(products, Array);
+    check(total, Number);
+    check(user, Object);
+    return Orders.insert({
+      owner: Meteor.userId() !== null ? Meteor.userId() : "",
+      products: products,
+      user: user
+    });
   }
+
 });
 
 

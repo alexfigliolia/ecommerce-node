@@ -47,7 +47,7 @@
 #burg {
 	transform: translateX(100%);
 	transition-duration: 0.3s;
-	transition-delay: 0.9s;
+	transition-delay: 0.4s;
 }
 #toCart {
 	cursor: pointer;
@@ -62,7 +62,7 @@
 .show-cart {
 	transform: translateX(-100%);
 	transition-duration: 0.3s;
-	transition-delay: 0.9s;
+	transition-delay: 0.4s;
 	@media #{$mq-800} {
 		transform: translateX(0%);
 	}
@@ -119,7 +119,7 @@
 		margin-right: 10px;
 		transform: translateX(70px);
 		transition-duration: 0.3s;
-		transition-delay: 0.9s;
+		transition-delay: 0.4s;
 		// width: 50%;
 		&>h2,
 		&>a {

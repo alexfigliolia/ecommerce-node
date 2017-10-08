@@ -42,6 +42,10 @@
 				@media #{$mq-550} {
 					margin-left: 0;
 				}
+				@media #{$mq-670} {
+					margin-left: 0;
+					margin-top: 50px;
+				}
 				&::after {
 					width: 80%;
 					left: 10%;
@@ -214,10 +218,13 @@
 		top: 110px;
 	}
 	@media #{$mq-957}{
-		top: 20%;
-		left: 25%;
+		top: 16.5%;
+		left: 15%;
 		height: 60px;
 		width: 60px;
+	}
+	@media #{$mq-1070}{
+		left: 20%;
 	}
 	&::after {
 		content: url("left.svg");

@@ -13,13 +13,13 @@ export default class Product extends Component {
   }
 
   componentDidMount() {
-    const carousel0 = document.getElementById('c1'),
-          carousel1 = document.getElementById('c2'),
-          carousel2 = document.getElementById('c3'),
-          options = {
-            "contain": true,
-            "watchCSS": true
-          };
+    const carousel0 = document.getElementById('c1');
+    const carousel1 = document.getElementById('c2');
+    const carousel2 = document.getElementById('c3');
+    const options = {
+      "contain": true,
+      "watchCSS": true
+    };
 
     this.flkty0 = new Flickity(carousel0, options);
     this.flkty1 = new Flickity(carousel1, options);
@@ -51,13 +51,15 @@ export default class Product extends Component {
         }
       });
     });
-    if(this.state.currentIndex0 === this.props.rf ||
-       this.state.currentIndex1 === this.props.rf ||
-       this.state.currentIndex2 === this.props.rf){
-      this.setState({ classes: 'product product-show' });
-    } else {
-      this.setState({ classes: 'product' });
-    }
+    setTimeout(() => {
+      if(this.state.currentIndex0 === this.props.rf ||
+         this.state.currentIndex1 === this.props.rf ||
+         this.state.currentIndex2 === this.props.rf){
+        this.setState({ classes: 'product product-show' });
+      } else {
+        this.setState({ classes: 'product' });
+      }
+    }, 1500);
   }
 
   componentWillUnmount() {
@@ -86,9 +88,15 @@ export default class Product extends Component {
           <h3>
             {
               this.props.name.split('').map((letter, i) => {
-                return <span
-                         style={{transitionDelay: (i/20) + 's'}} 
+                if(letter === ' ') {
+                  return <span
+                         style={{transitionDelay: (i/50) + 's'}} 
+                         key={i}>&nbsp;</span>
+                } else {
+                  return <span
+                         style={{transitionDelay: (i/50) + 's'}} 
                          key={i}>{letter}</span>
+                }
               })
             }
           </h3>

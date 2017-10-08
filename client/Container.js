@@ -1,36 +1,37 @@
 import { Meteor } from 'meteor/meteor';
 import { createContainer } from 'meteor/react-meteor-data';
+import { Carts } from '../api/carts.js';
 import App from './App.js';
 
 export default AppContainer = createContainer(() => {
   const users = Meteor.subscribe('userData');
   const id = Meteor.userId();
   const user = Meteor.user();
-  // const userSchedules = Meteor.subscribe('schedules');
+  const userCarts = Meteor.subscribe('carts');
   // const userEmployees = Meteor.subscribe('employees');
   // const userGroup = Meteor.subscribe('group');
-  // const schedulesReady = userSchedules.ready();
+  const cartsReady = userCarts.ready();
   // const employeesReady = userEmployees.ready();
   // const groupReady = userGroup.ready();
-  // const schedules = Schedules.find({owner: id}, {sort: {'schedule.for': 1}}).fetch();
+  const carts = Carts.find().fetch();
   // const employees = Employees.find({owner: id}).fetch();
   // const group = Group.find({owner: id}).fetch();
-  // const schedulesExist = schedulesReady && !!schedules;
+  const cartsExist = cartsReady && !!carts;
   // const employeesExist = employeesReady && !!employees;
   // const groupExists = groupReady && !!group;
   return {
     id,
     user,
-  //   schedulesReady,
+    cartsReady,
   //   employeesReady,
   //   groupReady,
-  //   userSchedules,
+    userCarts,
   //   userEmployees,
   //   userGroup,
-  //   schedulesExist,
+    cartsExist,
   //   employeesExist,
   //   groupExists,
-  //   schedules,
+    carts,
   //   employees,
   //   group
   };

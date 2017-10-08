@@ -12,7 +12,7 @@ export default class Banner extends Component {
   componentDidMount(){
     setTimeout(() => {
       this.setState({ classes: "banner banner-show" });
-    }, 1000);
+    }, 500);
   }
 
   render = () => {
