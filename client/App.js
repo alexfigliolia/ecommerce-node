@@ -140,6 +140,19 @@ export default class App extends Component {
         this.setState({ loginErrors: err.reason });
       } else {
         this.setState({ loggedIn: true, loginErrors: "" });
+        Meteor.call('cart.clear', (error, result) => {
+          if(error) {
+            console.log(error);
+          } else {
+            Meteor.call('cart.merge', this.state.cartProducts, (error, result) => {
+              if(error) {
+                console.log(error);
+              } else {
+                console.log(result + " - cart cleared and merged");
+              }
+            });
+          }
+        });
       }
     });
   }
@@ -270,32 +283,33 @@ export default class App extends Component {
 
   removeItem = (e) => {
     if(e.target.className === 'remove-item') {
-      const price = e.target.dataset.price;
-      const index = e.target.dataset.index;
-      const pid = e.target.dataset.id;
-      let cartItems = this.state.cartProducts,
-          total = this.state.cartTotal;
-      cartItems.splice(index, 1);
-      total -= price;
-      this.setState({
-        cartProducts: cartItems,
-        cartTotal: total
-      });
-      if(cartItems.length === 0) {
-        this.setState({
-          emptyCart: "empty-cart",
-          mgoatsS: "mgoats",
-          mgoatsL: "mgoats2"
-        });
-      }
       if(this.state.loggedIn) {
-        Meteor.call('user.removeFromCart', this.state.cartProducts[index], (error, result) => {
+        Meteor.call('user.removeFromCart', this.state.cartProducts[e.target.dataset.index], (error, result) => {
           if(error) {
             console.log(error);
           } else {
             console.log(result);
           }
         });
+      } else {
+        const price = e.target.dataset.price;
+        const index = e.target.dataset.index;
+        const pid = e.target.dataset.id;
+        let cartItems = this.state.cartProducts,
+            total = this.state.cartTotal;
+        cartItems.splice(index, 1);
+        total -= price;
+        this.setState({
+          cartProducts: cartItems,
+          cartTotal: total
+        });
+        if(cartItems.length === 0) {
+          this.setState({
+            emptyCart: "empty-cart",
+            mgoatsS: "mgoats",
+            mgoatsL: "mgoats2"
+          });
+        }
       }
     }
   }
@@ -354,6 +368,7 @@ export default class App extends Component {
           cartToggle={this.toggleCart}
           nav={this.navigate} 
           dot={this.state.cartProducts}
+          loggedIn={this.state.loggedIn}
           smallI={this.state.mgoatsS}
           largeI={this.state.mgoatsL} 
           page={this.state.page}
@@ -401,6 +416,7 @@ export default class App extends Component {
 
         <Menu 
           classes={this.state.menuClasses}
+          loggedIn={this.state.loggedIn}
           page={this.state.page}
           nav={this.navigate} 
           toCart={this.toggleCart} />

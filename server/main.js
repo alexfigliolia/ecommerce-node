@@ -101,6 +101,25 @@ Meteor.methods({
     return Carts.insert({owner: Meteor.userId(), products: []});
   },
 
+  'cart.clear'(){
+    return Carts.update({owner: Meteor.userId()}, {
+      $set: {
+        products: []
+      }
+    });
+  },
+
+  'cart.merge'(products){
+    check(products, Array);
+    for(let i = 0; i < products.length; i++) {
+      Carts.update({owner: Meteor.userId()}, {
+        $push: {
+          products: [products[i]]
+        }
+      })
+    }
+  },
+
   'user.addToCart'(product) {
     check(product, Array);
     return Carts.update({owner: Meteor.userId()}, {
@@ -216,8 +235,6 @@ Meteor.methods({
   },
 
   'user.placeOrder'(products, total){
-    console.log(products);
-    console.log(total);
     check(products, Array);
     check(total, Number);
     let tots = 0;

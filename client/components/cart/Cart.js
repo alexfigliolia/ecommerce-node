@@ -10,6 +10,10 @@ export default class Cart extends Component {
     document.body.style.overflow = 'auto';
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.classes === "shopping-cart") document.body.style.overflow = 'auto';
+  }
+
 	render = () => {
 		return(
 			<div 
