@@ -52,14 +52,23 @@ export default class Product extends Component {
       });
     });
     setTimeout(() => {
-      if(this.state.currentIndex0 === this.props.rf ||
-         this.state.currentIndex1 === this.props.rf ||
-         this.state.currentIndex2 === this.props.rf){
+      if(window.innerWidth >= 957) {
         this.setState({ classes: 'product product-show' });
       } else {
-        this.setState({ classes: 'product' });
+        if(this.state.currentIndex0 === this.props.rf ||
+           this.state.currentIndex1 === this.props.rf ||
+           this.state.currentIndex2 === this.props.rf){
+          this.setState({ classes: 'product product-show' });
+        } else {
+          this.setState({ classes: 'product' });
+        }
       }
     }, 1500);
+    window.addEventListener('resize', () => {
+      if(window.innerWidth >= 957) {
+        this.setState({ classes: 'product product-show' });
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -68,6 +77,7 @@ export default class Product extends Component {
       this.flkty1.destroy();
       this.flkty2.destroy();
     }
+    window.removeEventListener('resize', () => {});
   }
 
   render = () => {

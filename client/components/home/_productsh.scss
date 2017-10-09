@@ -94,10 +94,10 @@
 				opacity: 0;
 				transition-duration: 0.3s;
 				transform: translateY(-100%);
-				@media #{$mq-957} {
-					transform: translateY(0%);
-					opacity: 1;
-				}
+				// @media #{$mq-957} {
+				// 	transform: translateY(0%);
+				// 	opacity: 1;
+				// }
 			}
 		}
 	}

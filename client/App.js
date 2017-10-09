@@ -140,17 +140,11 @@ export default class App extends Component {
         this.setState({ loginErrors: err.reason });
       } else {
         this.setState({ loggedIn: true, loginErrors: "" });
-        Meteor.call('cart.clear', (error, result) => {
+        Meteor.call('cart.merge', this.state.cartProducts, (error, result) => {
           if(error) {
             console.log(error);
           } else {
-            Meteor.call('cart.merge', this.state.cartProducts, (error, result) => {
-              if(error) {
-                console.log(error);
-              } else {
-                console.log(result + " - cart cleared and merged");
-              }
-            });
+            console.log(result + " - cart merged");
           }
         });
       }
