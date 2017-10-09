@@ -27,15 +27,25 @@ export default class Product extends Component {
         }
       });
     });
-    if(this.state.currentIndex === this.props.rf){
+    if(window.innerWidth >= 957) {
       this.setState({ classes: 'product product-show' });
     } else {
-      this.setState({ classes: 'product' });
+      if(this.state.currentIndex === this.props.rf){
+        this.setState({ classes: 'product product-show' });
+      } else {
+        this.setState({ classes: 'product' });
+      }
     }
+    window.addEventListener('resize', () => {
+      if(window.innerWidth >= 957) {
+        this.setState({ classes: 'product product-show' });
+      }
+    });
   }
 
   componentWillUnmount() {
     if (this.flkty) this.flkty.destroy();
+    window.removeEventListener('resize', () => {});
   }
 
   render = () => {
