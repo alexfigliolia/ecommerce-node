@@ -14,12 +14,13 @@ export default class ProductsH extends Component {
             this.props.products.map((product, i) => {
               return(
                 <Product 
-                  name={product.title}
+                  name={product.name}
                   desc={product.description}
-                  ident={product.title}
+                  ident={product.name}
                   key={i}
-                  price={product.price.data.rounded.with_tax}
-                  image={product.images[0].url.https}
+                  mathPrice={product.meta.display_price.with_tax.amount}
+                  price={product.meta.display_price.with_tax.formatted}
+                  image={product.image}
                   more={this.props.more}
                   add={this.props.add}
                   pid={product.id}

@@ -87,12 +87,12 @@ export default class Product extends Component {
               onClick={this.props.add} 
               className='buy' 
               data-product={this.props.name} 
-              data-price={this.props.price}
+              data-price={this.props.mathPrice.toString().slice(0, -2)}
               data-id={this.props.pid} 
               data-text="BUY">
             </button>
           </div>
-          <div className='price'>${this.props.price}</div>
+          <div className='price'>{this.props.price.slice(0, -3)}</div>
       </div>
     );
   }

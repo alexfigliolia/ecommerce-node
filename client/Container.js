@@ -1,9 +1,9 @@
 import { Meteor } from 'meteor/meteor';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import { Carts } from '../api/carts.js';
 import App from './App.js';
 
-export default AppContainer = createContainer(() => {
+export default withTracker(() => {
   const users = Meteor.subscribe('userData');
   const id = Meteor.userId();
   const user = Meteor.user();
@@ -19,4 +19,4 @@ export default AppContainer = createContainer(() => {
     cartsExist,
     carts
   };
-}, App);
+})(App);

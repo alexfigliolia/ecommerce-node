@@ -12,7 +12,7 @@ export default class Product extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     const carousel0 = document.getElementById('c1');
     const carousel1 = document.getElementById('c2');
     const carousel2 = document.getElementById('c3');
@@ -71,7 +71,7 @@ export default class Product extends Component {
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount = () => {
     if (this.flkty0 || this.flkty1 || this.flkty2) {
       this.flkty0.destroy();
       this.flkty1.destroy();
@@ -121,12 +121,12 @@ export default class Product extends Component {
             onClick={this.props.add} 
             className='buy' 
             data-product={this.props.name} 
-            data-price={this.props.price} 
+            data-price={this.props.mathPrice.toString().slice(0, -2)} 
             data-id={this.props.pid} 
             data-text="BUY">
           </button>
         </div>
-        <div className='price'>${this.props.price}</div>
+        <div className='price'>{this.props.price.slice(0, -3)}</div>
       </div>
     );
   }

@@ -6,6 +6,10 @@ import { Orders } from '../api/orders.js';
 import { check } from 'meteor/check';
 import { Moltin } from '@moltin/sdk';
 import MoltinUtil from 'moltin-util';
+// import stripePackage from 'stripe';
+// import { StripeSettings } from '../settings.js';
+
+// const stripe = stripePackage(StripeSettings.private.stripe.testSecretKey);
 
 const client = MoltinUtil({
 	publicId: 'tnuN3Xzb6tnN7p5ZETF1M0Gtwba0AoSh2bWL63pI',
@@ -86,7 +90,10 @@ Meteor.publish('carts', function() {
 Meteor.methods({
 	'products.get'(){
 		return client.request(client.endpoints.PRODUCTS)
-	  .then(resp => resp)
+	  .then(resp => {
+      console.log(resp);
+      return resp;
+    })
 	  .catch(err => console.log('err', err));
 	},
 
@@ -237,13 +244,13 @@ Meteor.methods({
   'user.placeOrder'(products, total){
     check(products, Array);
     check(total, Number);
-    let tots = 0;
+    let totes = 0;
     let prods = '';
     for(let i = 0; i<products.length; i++) {
-      tots += parseInt(products[i][1]);
+      totes += parseInt(products[i][1]);
       prods += products[i][0] + ', ';
     }
-    console.log('placed fake order for ' + tots + '! I bought ' + products.length + ' products: ' + prods);
+    console.log('placed fake order for ' + totes + '! I bought ' + products.length + ' products: ' + prods);
   },
 
   'orders.create'(prods, total, user){

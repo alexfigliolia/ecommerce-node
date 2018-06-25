@@ -10,7 +10,7 @@ export default class Shop extends Component {
     }
   }
 
-  componentDidMount(){
+  componentDidMount = () => {
     setTimeout(() => {
       this.setState({ classes: "products shop-products shop-show" });
     }, 500);
@@ -40,12 +40,13 @@ export default class Shop extends Component {
               this.props.svProducts.map((product, i) => {
                 return(
                   <Product 
-                    name={product.title}
+                    name={product.name}
                     desc={product.description}
-                    ident={product.title}
+                    ident={product.name}
                     key={i}
-                    price={product.price.data.rounded.with_tax}
-                    image={product.images[0].url.https}
+                    mathPrice={product.meta.display_price.with_tax.amount}
+                    price={product.meta.display_price.with_tax.formatted}
+                    image={product.image}
                     more={this.props.more}
                     add={this.props.add}
                     pid={product.id}
@@ -64,12 +65,13 @@ export default class Shop extends Component {
               this.props.ovProducts.map((product, i) => {
                 return(
                   <Product 
-                    name={product.title}
+                    name={product.name}
                     desc={product.description}
-                    ident={product.title}
+                    ident={product.name}
                     key={i}
-                    price={product.price.data.rounded.with_tax}
-                    image={product.images[0].url.https}
+                    mathPrice={product.meta.display_price.with_tax.amount}
+                    price={product.meta.display_price.with_tax.formatted}
+                    image={product.image}
                     more={this.props.more}
                     add={this.props.add}
                     pid={product.id}
@@ -87,12 +89,13 @@ export default class Shop extends Component {
               this.props.pbProducts.map((product, i) => {
                 return(
                   <Product 
-                    name={product.title}
+                    name={product.name}
                     desc={product.description}
-                    ident={product.title}
+                    ident={product.name}
                     key={i}
-                    price={product.price.data.rounded.with_tax}
-                    image={product.images[0].url.https}
+                    mathPrice={product.meta.display_price.with_tax.amount}
+                    price={product.meta.display_price.with_tax.formatted}
+                    image={product.image}
                     more={this.props.more}
                     add={this.props.add}
                     pid={product.id}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { scrollIt } from '../helpers/helpers';
+import { gateway as MoltinGateway } from '@moltin/sdk';
 import Reveal from './components/Reveal';
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
@@ -13,6 +14,10 @@ import Moreback from './components/more/Moreback';
 import Shop from './components/shop/Shop';
 import Contact from './components/contact/Contact';
 import Checkout from './components/checkout/Checkout';
+
+const Moltin = MoltinGateway({
+  client_id: 'tnuN3Xzb6tnN7p5ZETF1M0Gtwba0AoSh2bWL63pI'
+});
 
 export default class App extends Component {
   constructor(props) {
@@ -48,17 +53,26 @@ export default class App extends Component {
       homeProducts: []
     }
     this.body = document.body;
+    this.categories = [
+      'f9521afc-68f9-48a5-bb9d-9424daffa76d'
+    ]
   }
 
-  componentWillMount() {
-    Meteor.call('products.get', (error, result) => {
+  getProducts = () => {
+    Moltin.Products.With('main_image').All().then((prods, error) => {
       if(error) {
         console.log(error);
       } else {
-        const products = result.result;
-        const pb = products.filter(item => item.category.value === 'Pasta & Biscotti');
-        const ov = products.filter(item => item.category.value === 'Oil & Vinegar');
-        const sv = products.filter(item => item.category.value === 'Sauces & Veggies'); 
+        console.log(prods);
+        const products = [];
+        for(let i = 0; i<prods.data.length; i++) {
+          const product = prods.data[i];
+          product.image = prods.included.main_images[i].link.href;
+          products.push(product);
+        }
+        const pb = products.filter(item => item.relationships.categories.data[0].id === '923154a6-c98a-430e-bd07-dc03e961c038');
+        const ov = products.filter(item => item.relationships.categories.data[0].id === 'f9521afc-68f9-48a5-bb9d-9424daffa76d');
+        const sv = products.filter(item => item.relationships.categories.data[0].id === '09807c47-4218-461e-b821-2ea9bee168f2'); 
         this.setState({
           ovProducts: ov.reverse(),
           pbProducts: pb.reverse(),
@@ -70,6 +84,7 @@ export default class App extends Component {
   }
 
   componentDidMount(){
+    this.getProducts();
     history.pushState({page: "Home"}, null, '/Home');
     window.addEventListener('popstate', (e) => {
       this.setState({ revealClasses: "reveal reveal-show" }); 
@@ -82,16 +97,16 @@ export default class App extends Component {
     this.setState({ loggedIn: Meteor.user() !== null });
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps = nextProps => {
     console.log(nextProps);
     if(nextProps !== this.props) {
+      const cart = []; 
+      let cartTotal = 0;
       if(nextProps.carts.length !== 0) {
-        var cart = [],
-            cartTotal = 0;
         for(let i = 0; i < nextProps.carts[0].products.length; i++) {
           cart.push(nextProps.carts[0].products[i][0]);
-          // console.log(nextProps.carts[0].products[i][0][1]);
-          cartTotal += nextProps.carts[0].products[i][0][1];
+          console.log(nextProps.carts[0].products[i][0][1]);
+          cartTotal += nextProps.carts[0].products[i][1];
         }
       }
       this.setState({ 
@@ -135,6 +150,7 @@ export default class App extends Component {
   }
 
   login = (e, p) => {
+    console.log('called login');
     Meteor.loginWithPassword(e, p, (err) => {
       if(err) {
         this.setState({ loginErrors: err.reason });
@@ -254,6 +270,9 @@ export default class App extends Component {
       const itemPrice = parseInt(e.target.dataset.price, 10);
       cartItems = cartItems.push([cartItem, itemPrice, pid]);
       total += itemPrice;
+      console.log(cartItem);
+      console.log(itemPrice);
+      console.log(pid);
       this.setState({
         cartClasses: "shopping-cart cart-show",
         cartHide: false,
